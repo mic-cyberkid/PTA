@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pannable="true" prefHeight="432.0" prefWidth="555.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21">
+   <content>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+         <children>
+            <ImageView fitHeight="397.0" fitWidth="516.0" pickOnBounds="true">
+               <image>
+                  <Image url="@images/formulas/1.PNG" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="397.0" fitWidth="516.0" layoutX="29.0" layoutY="27.0" pickOnBounds="true">
+               <image>
+                  <Image url="@images/formulas/2.PNG" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="397.0" fitWidth="516.0" layoutX="22.0" layoutY="407.0" pickOnBounds="true">
+               <image>
+                  <Image url="@images/formulas/3.PNG" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="397.0" fitWidth="516.0" layoutX="22.0" layoutY="804.0" pickOnBounds="true">
+               <image>
+                  <Image url="@images/formulas/4.PNG" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="397.0" fitWidth="516.0" layoutX="22.0" layoutY="1201.0" pickOnBounds="true">
+               <image>
+                  <Image url="@images/formulas/5.PNG" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="397.0" fitWidth="516.0" layoutX="22.0" layoutY="1598.0" pickOnBounds="true">
+               <image>
+                  <Image url="@images/formulas/6.PNG" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="397.0" fitWidth="516.0" layoutX="22.0" layoutY="1995.0" pickOnBounds="true">
+               <image>
+                  <Image url="@images/formulas/7.PNG" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="397.0" fitWidth="516.0" layoutX="22.0" layoutY="2392.0" pickOnBounds="true">
+               <image>
+                  <Image url="@images/formulas/8.PNG" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="397.0" fitWidth="516.0" layoutX="22.0" layoutY="2789.0" pickOnBounds="true">
+               <image>
+                  <Image url="@images/formulas/9.PNG" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="397.0" fitWidth="516.0" layoutX="22.0" layoutY="3186.0" pickOnBounds="true">
+               <image>
+                  <Image url="@images/formulas/10.PNG" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="397.0" fitWidth="516.0" layoutX="22.0" layoutY="3583.0" pickOnBounds="true">
+               <image>
+                  <Image url="@images/formulas/11.PNG" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="397.0" fitWidth="516.0" layoutX="22.0" layoutY="3980.0" pickOnBounds="true">
+               <image>
+                  <Image url="@images/formulas/12.PNG" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="397.0" fitWidth="516.0" layoutX="22.0" layoutY="4377.0" pickOnBounds="true">
+               <image>
+                  <Image url="@images/formulas/13.PNG" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="397.0" fitWidth="516.0" layoutX="22.0" layoutY="4774.0" pickOnBounds="true">
+               <image>
+                  <Image url="@images/formulas/14.PNG" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="397.0" fitWidth="516.0" layoutX="22.0" layoutY="5171.0" pickOnBounds="true">
+               <image>
+                  <Image url="@images/formulas/15.PNG" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="397.0" fitWidth="516.0" layoutX="22.0" layoutY="5568.0" pickOnBounds="true">
+               <image>
+                  <Image url="@images/formulas/16.PNG" />
+               </image>
+            </ImageView>
+         </children>
+      </VBox>
+   </content>
+</ScrollPane>
