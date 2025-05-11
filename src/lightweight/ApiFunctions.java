@@ -93,7 +93,83 @@ public class ApiFunctions {
         }
         
     }
+    
+    
 
+    // Function to change passw0rd 
+    public static JSONObject changePassword(String old_password,String new_password) throws IOException {
+        String url = BASE_URL + "/update-password";
+        JSONObject body = new JSONObject();
+        body.put("old_password", old_password);
+        body.put("new_password", old_password);
+
+
+        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Authorization", "Bearer " + authToken);
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setDoOutput(true);
+
+        try (OutputStream os = connection.getOutputStream()) {
+            byte[] input = body.toString().getBytes(StandardCharsets.UTF_8);
+            os.write(input, 0, input.length);
+        }
+
+        int responseCode = connection.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            JSONObject responseJson = new JSONObject(response.toString());
+            System.out.println("Response: "+responseJson);
+            return responseJson;
+        } else if (responseCode == 401 || responseCode == 403) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+            String inputLine;
+            StringBuffer content = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+            JSONObject responseJson = new JSONObject(content.toString());
+            System.out.println(content.toString());
+            return responseJson;
+        } else if (responseCode == 400 || responseCode == 404) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+            String inputLine;
+            StringBuffer content = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+            JSONObject responseJson = new JSONObject(content.toString());
+            System.out.println(content.toString());
+            return responseJson;
+        } else if (responseCode == 500 || responseCode == 502 || responseCode == 503 || responseCode == 504) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+            String inputLine;
+            StringBuffer content = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+            JSONObject responseJson = new JSONObject(content.toString());
+            
+            System.out.println(content.toString());
+            return responseJson;
+        } else {
+            
+            System.out.println("Unexpected response: " + connection.getResponseMessage());
+        }
+        return null;
+    }
+    
+    
     // Function to send message
     public static JSONObject sendMessage(String message, boolean newChat, String conversation_id) throws IOException {
         String url = BASE_URL + "/chat";
@@ -214,15 +290,31 @@ public class ApiFunctions {
         return null;
     }
 
-    
-    
-    // main
-    public static void main(String[] args) throws IOException {
-        // Example usage
-        //registerUser("testUser", "password123");
-        loginUser("testUser", "password123");
-        sendMessage("Define Matter",false,"6461e402-2579-413a-aeea-5d4e977804c5");
-        loadConversations();
-        loadChatHistory("6461e402-2579-413a-aeea-5d4e977804c5");
+    // Load chat history by ID
+    public static JSONObject deleteChatHistory(String conversationId) throws IOException {
+        String url = BASE_URL + "/conversations/" + conversationId;
+
+        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        connection.setRequestMethod("DELETE");
+        connection.setRequestProperty("Authorization", "Bearer " + authToken);
+
+        int responseCode = connection.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            JSONObject responseJson = new JSONObject(response.toString());
+            return responseJson;
+        } else {
+                System.out.println("Error loading chat history");
+           
+        }
+        return null;
     }
+
 }

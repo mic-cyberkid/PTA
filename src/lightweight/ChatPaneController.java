@@ -101,7 +101,6 @@ public class ChatPaneController implements Initializable {
     HashMap<String, Chat> UserChats; // Chat lookup table
     
     
-    Chat CurrentChat;
     User activeUser;
     
     /* State of Chat Pane
@@ -154,7 +153,7 @@ public class ChatPaneController implements Initializable {
     private HTMLTextFlow chatWebView;
     
     private WebEngine webEngine;
-    
+    private boolean newChat;
     
 
     
@@ -170,7 +169,7 @@ public class ChatPaneController implements Initializable {
         * TODO : Make code clean after build (o-^)
          */
         
-        
+        newChat = true;
         // Initialize Variables and User Interface
         chatWebView = new HTMLTextFlow();
         chatWebView.setStyle("-fx-background-coleor:  linear-gradient(to bottom, #2c3e50, #4ca1af); -fx-background-radius: 10px; -fx-border-radius: 10px;");
@@ -198,10 +197,16 @@ public class ChatPaneController implements Initializable {
         });
         webEngine = chatWebView.getWebEngine();
         
-        //String markedJsPath = getClass().getResource("src/res/Marked.js").toExternalForm();
+        String markedJsPath = getClass().getResource("lightweight/Marked.js").toExternalForm();
         String mathJaxPath = getClass().getResource("lightweight/tex-mml-chtml.min.js").toExternalForm();
+        
+        // TODO: Add mermaid to display diagrams
         String mermaidPath = getClass().getResource("lightweight/mermaid.min.js").toExternalForm();
-        //System.out.println("Path:"+mathJaxPath);
+        
+        System.out.println("Path:"+mathJaxPath);
+        System.out.println("Path:"+markedJsPath);
+        
+        
         String initialContent = """
         <!DOCTYPE html>
         <html>
@@ -210,29 +215,69 @@ public class ChatPaneController implements Initializable {
           body { font-family: Arial, sans-serif; background-color: #f5f5f5; margin: 10px; padding: 10px; }
           .message { max-width: 80%; border-radius: 10px; margin: 5px; }
           .user { background-color: #2c3e50; color: white; align-self: flex-end; text-align: justify; margin: 3px; padding: 5px; }
-          .bot { background-color: #e0e0e0; color: black; align-self: flex-start; text-align: left; margin: 5px; padding: 10px; }
+          .bot { background-color: #e0e0e0; color: black; align-self: flex-start; text-align: left; margin: 5px; padding: 10px; overflow-wrap: break-word; }
           pre{ background-color: #000102; border-radius: 10px; color: wheat; box-shadow: 2px 2px grey; padding:5px; margin: 5px; }
           /* Table style for the chat */
               table {
-                  width: 100%;
-                  border-collapse: collapse;
+                border-collapse: separate;
+                width: 100%;
               }
-          
-              /* Styling for each row (representing each message) */
-              tr {
-                  padding: 10px;
-                  border-bottom: 1px solid #ddd;
+              
+              th, td {
+                border: 1px solid #ddd;
+                padding: 10px;
+                text-align: left;
+                font-size: 14px;
+                font-weight: bold;
+                color: #333;
+              }
+              
+              th {
+                background-color: #f0f0f0;
+              }
+              
+              tr:nth-child(even) {
+                background-color: #f9f9f9;
+              }
+              
+              table caption {
+                margin-bottom: 10px;
+                text-align: center;
+              }
+              
+              table caption img {
+                max-width: 50%;
+                height: auto;
+              }
+              
+              table .header-row {
+                background-color: #333;
+                color: #fff;
+                font-size: 18px;
+                font-weight: bold;
+                padding: 5px;
+              }
+              /* Add a fade-in effect when the table is loaded */
+              table {
+                animation: fadeIn 1s;
+              }
+              
+              @keyframes fadeIn {
+                from {
+                  opacity: 0;
+                }
+                to {
+                  opacity: 1;
+                }
               }
           
           .typing { font-weight: bold; animation: blink 1s infinite; }
           @keyframes blink { 0%% { opacity: 1; } 50%% { opacity: 0; } 100%% { opacity: 1; } }
           #chatbox { display: flex; flex-direction: column; }
-        </style><script type="text/javascript" async
-          src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML\">
-        </script>""" +
-         "<script src='" + "markedJsPath" + "'></script>" +
+        </style>""" +
+         "<script src='" + markedJsPath + "'></script>" +
          " <script async src='" + mathJaxPath + "'></script>" +
-         " <script async src='" + mermaidPath + "'></script>" +
+         
          """
          <script type="text/javascript">
            window.onload = function() {
@@ -266,7 +311,7 @@ public class ChatPaneController implements Initializable {
         """
         </head>
         <body>
-          <div id="chatbox"></div>
+          <div id="chatbox" class="mermaid"></div>
         </body>
         </html>
         """;
@@ -290,13 +335,8 @@ public class ChatPaneController implements Initializable {
         //set some features
         editImageButton(sendBtn);
         
-        //Attempt to load chat history
-        System.out.println("Loading chat history from database ...");
-        ChatHistory = fetchChats();
-        
         //load widget
         widget = loadWidgets();
-        
         
         if(Session.getTotal_conversations() < 1){
             state = 0; // fresh chat, fresh user
@@ -472,17 +512,6 @@ public class ChatPaneController implements Initializable {
         executeJavaScript("renderMarkdown",markdownMessage, senderClass);   
     }
     
-    //Handle new Chat
-    public void HandleChat(String message, String chatbotMessage){
-            // Process new user chat
-            //Initialize chat settings
-            CurrentChat.setTitle(message.split("\\.")[0]);
-            CurrentChat.setDesc(chatbotMessage);
-            //Add message to tracking list (lookup table) for easy access
-            UserChats.put(CurrentChat.getChatID(), CurrentChat);
-            
-            
-    }
     
     //Load widget from fxml
     public Accordion loadWidgets(){
@@ -532,7 +561,68 @@ public class ChatPaneController implements Initializable {
         Platform.runLater(()->{
             chatProgress.setVisible(true);
         });
-        // Send Message and get respOnse
+        // Send Message and get response
+        BackGroundFetch getRes = new BackGroundFetch(message, Session.isNewChat(), Session.getConversation_id());
+        
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<String> response = (Future<String>) executor.submit(getRes);
+        executor.submit(() -> {
+            try {
+                String chatbotMessage =  response.get();
+                chatProgress.setVisible(false);
+                
+                //update ui
+                Platform.runLater(() -> {
+                    try {
+                        if(response.get() != null){
+                            
+                            //Display chatbot message
+                            addMessage(chatbotMessage, false);
+                       
+                            switch (state) {
+                                // New chat
+                                case 0 -> {
+                                   
+                                    //remove Dummy chatHistory
+                                    chatHistoryAccordion.getPanes().remove(noHistory);
+                                    appendHistory(message, chatbotMessage);
+                                    state = 3; //Set state for chat continuation
+                                    return;
+                                }
+                                case 2 -> {
+                                    //Initialize chat settings
+                                    //HandleChat(message, chatbotMessage);
+                                    appendHistory(message, chatbotMessage);
+                                    state = 3; //Set state for chat continuation
+                                    return;
+                                }
+                                case 1 -> {
+                                    //HandleChat(message, chatbotMessage);
+                                    //remove Dummy chatHistory
+                                    chatHistoryAccordion.getPanes().remove(noHistory);
+                                    appendHistory(message, chatbotMessage);
+                                    state = 3; //Set state for chat continuation
+                                    return;
+                                }
+                                default -> {
+                                    //Continuing a chat
+                                    // Save and keep track of chats for both user and chatbot
+                                    
+                                }
+                            }
+                            
+                        }
+                    } catch (InterruptedException | ExecutionException ex) {
+                        Logger.getLogger(ChatPaneController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                });
+          
+        } catch (InterruptedException | ExecutionException ex) {
+            Logger.getLogger(ChatPaneController.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            executor.shutdown();
+        }
+    });
         // Check conversation ids before adding message
     }
    
@@ -574,22 +664,16 @@ public class ChatPaneController implements Initializable {
             @Override
             public void handle(ActionEvent eh) {
                 String selectedChatId = chatHistoryAccordion.getExpandedPane().getId();
-                // Get selected chat from chatList
-                Chat selectedChat = UserChats.get(selectedChatId);
-
-                CurrentChat = selectedChat;
-                UserMessages = selectedChat.getUserMessages();
-                ChatBotMessages = selectedChat.getChatBotMessages();
-                CurrentChat.setChatBotMessages(ChatBotMessages);
-                CurrentChat.setUserMessages(UserMessages);
                 //Clear current pane
                 chatsBox.getChildren().clear();
                 chatsBox.setAlignment(Pos.TOP_LEFT);
                 chatsBox.setFillWidth(true);
                 chatWebView.getWebEngine().executeScript("document.getElementById('chatbox').innerHTML = '';");
                 chatsBox.getChildren().add(chatWebView);
+                // Set converstion id
+                Session.setConversation_id(selectedChatId);
                 // Load chatBox
-                loadChatBox(selectedChat.getChatID());
+                loadChatBox(selectedChatId);
                 state = 3;
             }
         });
@@ -612,38 +696,31 @@ public class ChatPaneController implements Initializable {
             public void handle(ActionEvent eh) {
                 String selectedChatId = chatHistoryAccordion.getExpandedPane().getId();
                 // Get selected chat from chatList
-                Chat selectedChat = UserChats.get(selectedChatId);
-                if(selectedChat == CurrentChat){
+                if(selectedChatId == Session.getConversation_id()){
                     Alert prompt = new Alert(Alert.AlertType.CONFIRMATION);
                     prompt.setHeaderText("Permission to delete current chat.");
                     prompt.setContentText("Are you sure you want to delete this chat?");
                     Optional<ButtonType> result = prompt.showAndWait();
                     if(result.isPresent() && result.get() == ButtonType.OK){
                         // remove and delete chat
-                        
-                        ChatHistory.remove(CurrentChat);
-                        UserChats.remove(selectedChatId);
                         chatsBox.getChildren().clear();
                         // Delete chat pane from history pane, do it well
                         chatHistoryAccordion.getPanes().remove(chatHistoryAccordion.getExpandedPane());
-                        
+                        // Clear session conversation id
+                        Session.setConversation_id(null);
                         // TODO: Delete chat from local database too
                         deleteChat(selectedChatId);
-                        CurrentChat = new Chat();
+                        openNewChat(eh);
                         state = 0;
                     }
                 }else{
                     // remove and delete chat
-                        
-                    ChatHistory.remove(CurrentChat);
-                    UserChats.remove(selectedChatId);
                     chatsBox.getChildren().clear();
                     // Delete chat pane from history pane, do it well
                     chatHistoryAccordion.getPanes().remove(chatHistoryAccordion.getExpandedPane());
 
                     // TODO: Delete chat from local database too
                     deleteChat(selectedChatId);
-                    CurrentChat = new Chat();
                     state = 0;
                 }
             }
@@ -668,8 +745,10 @@ public class ChatPaneController implements Initializable {
     
     
     //Add chat to histpane
-    public void appendHistory(Chat chat){
-        TitledPane chatHist = makeChatPane(chat.getChatID(), chat.getTitle(), chat.getDesc());
+    public void appendHistory(String message, String chatBotMessage ){
+        String[] message_split = message.split(" ");
+        String title = message_split[0];
+        TitledPane chatHist = makeChatPane(Session.getConversation_id(), title, chatBotMessage);
         chatHist.setStyle("-fx-background-radius: 50px;");
         chatHistoryAccordion.getPanes().add(chatHist);
 
@@ -679,99 +758,32 @@ public class ChatPaneController implements Initializable {
     public void loadChatsPane(){
         //Loop through chat list, create a pane for it and load it
         // Make request to the /conversation endpoint
-        for(Chat userChat : ChatHistory){
-            UserChats.put(userChat.getChatID(), userChat); // Load lookup table too
-            chatHistoryAccordion.getPanes().add(makeChatPane(userChat.getChatID(), userChat.getTitle(), userChat.getDesc()));
-        }
-        
-    }
-    
-    
-    //get response from our backend API
-    public String getResponse(String message){
         try {
-            // Create the HTTP client
-            HttpClient client = HttpClient.newHttpClient();
-            
-            // Create a JSON object to send in the body of the POST request
-            JSONObject jsonBody = new JSONObject();
-            jsonBody.put("message", message);
-            
-            // Create the POST request
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://127.0.0.1:5000/chat"))  // Flask server endpoint
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(jsonBody.toString(), StandardCharsets.UTF_8))
-                    .build();
-            
-            // Send the request and get the response
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            
-            // Print the response
-            JSONObject parseResponse = new JSONObject(response.body());
-            System.out.println(response.body());
-            System.out.println("Response code: " + response.statusCode());
-            System.out.println("Response body: " + parseResponse.getString("response"));
-            return parseResponse.getString("response");
-        } catch (IOException ex) {
-            Logger.getLogger(ChatPaneController.class.getName()).log(Level.SEVERE, null, ex);
-            showAlert(AlertType.ERROR, "An error occured while fetching response.", "Probably a network error.");
-            
-            return "An error occured while fetching response.\nProbably a network error.";
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ChatPaneController.class.getName()).log(Level.SEVERE, null, ex);
-            
-            showAlert(AlertType.ERROR, "Program Interrupt", "Process was interrupted");
-            return "An error occured while fetching response.";
+            /* [{
+                "conversation_id": conv_id,
+                "conversation_header": header,
+                "conversation_desc": description
+            }]*/
+            JSONObject response = ApiFunctions.loadConversations();
+            int total_convos = response.getInt("total");
+            if(total_convos > 0){
+                JSONArray conversations = response.getJSONArray("messages");
+                System.out.println("JSONArray : "+ conversations);
+                for(Object conversation : conversations){
+                    JSONObject chatDesc = (JSONObject) conversation;
+                    String chat_id = chatDesc.getString("conversation_id");
+                    String header = chatDesc.getString("conversation_header");
+                    String description = chatDesc.getString("conversation_desc");
+                    chatHistoryAccordion.getPanes().add(makeChatPane(chat_id, header, description));
+                }
+            }else{
+                // Display noHistory pane
+                System.out.println("No Chat history!");
+            }
+      
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        
-        
-        
-    }
-    
-    
-    //get response from our backend API [trained llama 3.2]
-    public String getLlamaResponse(String message){
-        try {
-            // Create the HTTP client
-            HttpClient client = HttpClient.newHttpClient();
-            
-            // Create a JSON object to send in the body of the POST request
-            JSONObject jsonBody = new JSONObject();
-            jsonBody.put("model", "llama3.2");
-            jsonBody.put("prompt", message);
-            jsonBody.put("stream", false);
-            
-            
-            // Create the POST request
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://127.0.0.1:11434/api/generate"))  // Flask server endpoint
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(jsonBody.toString(), StandardCharsets.UTF_8))
-                    .build();
-            
-            // Send the request and get the response
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            
-            // Print the response
-            JSONObject parseResponse = new JSONObject(response.body());
-            System.out.println(response.body());
-            System.out.println("Response code: " + response.statusCode());
-            System.out.println("Response body: " + parseResponse.getString("response"));
-            return parseResponse.getString("response");
-        } catch (IOException ex) {
-            Logger.getLogger(ChatPaneController.class.getName()).log(Level.SEVERE, null, ex);
-            showAlert(AlertType.ERROR, "An error occured while fetching response.", "Probably a network error.");
-            
-            return "An error occured while fetching response.\nProbably a network error.";
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ChatPaneController.class.getName()).log(Level.SEVERE, null, ex);
-            
-            showAlert(AlertType.ERROR, "Program Interrupt", "Process was interrupted");
-            return "An error occured while fetching response.";
-        }
-        
-        
         
     }
     
@@ -789,27 +801,6 @@ public class ChatPaneController implements Initializable {
     /* *****************\
     | DATABASE METHODS  |
     \*******************/
-    
-    
-    // Load chats from database into ChatHistory
-    private ArrayList<Chat> fetchChats(){
-        // Load previous chat info from local database into ChatHistory
-        ArrayList<Chat> userChats = new ArrayList<>();
-        System.out.println("Fetching chats for "+Session.getAuthUser()+".");
-            
-        /*
-                String id = result.getString("chat_id");
-                String title = result.getString("title");
-                String description = result.getString("description");
-                userChats.add(new Chat(id, title, description));
-                System.out.println("Conversation : "+title);
-            }
-            System.out.println("Finished loading chats ...");
-            System.out.println("Loaded : "+userChats.size()+" chats.");
-        */
-       return userChats;
-    }
-    
     
     //Fetch userMessages. Call this method when load Button is clicked
     public void loadChatBox(String chatId){
@@ -831,25 +822,11 @@ public class ChatPaneController implements Initializable {
                     System.out.println("User: " + userMessages.getString(i));
                 }
                 if (i < botMessages.length()) {
-                    addMessage(userMessages.getString(i), false);
+                    addMessage(botMessages.getString(i), false);
                     System.out.println("Assistant: " + botMessages.getString(i));
                 }
             }
-            
-            
-            
-            CurrentChat.setChatBotMessages(ChatBotMessages);
-            CurrentChat.setUserMessages(UserMessages);
-            if(ChatBotMessages.size() == UserMessages.size()){
-                for(int i =0; i < UserMessages.size(); i++){
-                    addMessage(UserMessages.get(i), true);
-                    addMessage(ChatBotMessages.get(i), false);
-                    System.out.println("Bot:"+ChatBotMessages.get(i));
-                }
-                
-            }
-            
-            
+ 
         }catch(IOException ex){
             System.out.println("Error:"+ ex.getMessage());
        
@@ -861,7 +838,13 @@ public class ChatPaneController implements Initializable {
     private void deleteChat(String chatId){
         //TODO : Make request to delete chat from database
         try {
-            String query = "DELETE FROM chats WHERE chat_id = ?";
+            JSONObject response = ApiFunctions.deleteChatHistory(chatId);
+            if(response != null){
+                String msg = response.getString("status");
+                if(msg.equals("deleted")){
+                    showAlert(Alert.AlertType.INFORMATION, "Chat", "Message deleted");
+                }
+            }
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -924,6 +907,9 @@ public class ChatPaneController implements Initializable {
     private void openNewChat(ActionEvent event) {
         
         //TODO: Clear current chatsBox
+        newChat = true;
+        Session.setNewChat(newChat);
+        
         chatsBox.getChildren().clear();
         System.out.println("ChatBox : "+ chatsBox);
         chatsBox.getChildren().add(welcomePane);
@@ -932,9 +918,8 @@ public class ChatPaneController implements Initializable {
         chatWebView.getWebEngine().executeScript("document.getElementById('chatbox').innerHTML = '';");
         
         // TODO : HTML WELCOME CARD and delete it when user press send button
-        //chatsBox.getChildren().add(welcomePane);
-       
-        //Clear current user chat
+        
+        //Clear current converstion id
         Session.setConversation_id(null);
         // Set state
         if(state == 1){

@@ -125,6 +125,7 @@ public class LoginController implements Initializable {
                 
                 Parent root = FXMLLoader.load(getClass().getResource("/res/Home.fxml"));
                 Scene scene = new Scene(root);
+                System.out.println(stage.getScene().getRoot().getChildrenUnmodifiable());
                 LoginController login = new LoginController(stage);
                 HomeController home = new HomeController(stage);
                 Node node = (Node)event.getSource();

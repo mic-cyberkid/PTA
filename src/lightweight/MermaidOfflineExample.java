@@ -44,11 +44,43 @@ public class MermaidOfflineExample extends Application {
             "<body>" +
             "<div class='mermaid'>" +
             "graph LR\n" +
-            "    A-->B\n" +
+            "    A--> B\n" +
             "    A-->C\n" +
             "    B-->D\n" +
-            "    C-->D" +
-            "</div>" +
+            "    C-->Data" +
+            "</div>" + """
+                       <div class='mermaid'>
+                           graph LR\n
+                             A --> Review of Motion\n
+                             B --> Definition and Importance of Kinematics\n
+                             C --> Distance, Displacement, Speed, Velocity, Acceleration \n
+                             D -->Solving for Distance and Displacement \n
+                             E --> Problem Set: Review and Apply Key Concepts \n
+                       
+                             A --> Linear vs. Non-Linear Motion \n
+                             B --> Uniform, Variable, and Circular Motion \n
+                             C --> Real-Life Applications of Each Type of Motion \n
+                             D --> Identifying the Type of Motion in a Scenario \n
+                             E --> Problem Set: Apply Kinematic Concepts to Real-Life Situations \n
+                       
+                             A --> Distance Formula  \n
+                             B --> Solving for Distance Using the Formula \n
+                             C --> Calculating Distances in Everyday Life \n
+                             D --> Finding Distance Using a Diagram \n
+                             E --> Problem Set: Applying Distance Formulas \n
+                       
+                             A --> Velocity Formula  \n
+                             B --> Solving for Velocity Using the Formula \n
+                             C --> Understanding Velocity Graphs \n
+                             D --> Finding Acceleration from Velocity Data \n
+                             E --> Problem Set: Applying Velocity Formulas \n\n
+                       
+                             A --> Review of Key Concepts \n
+                             B --> Application Problems with Answers \n
+                             C --> Formal Assessment of Kinematic Understanding \n
+                             E --> Reflection on Progress and Future Learning \n
+                         </div>
+                       """+
                 " <p>Inline math: \\( a^2 + b^2 = c^2 \\)</p>\n" +
 "    <p>Display math:</p>\n" + "<p>"+
 "    \\[ E = mc^2 \\]" +"</p>"+

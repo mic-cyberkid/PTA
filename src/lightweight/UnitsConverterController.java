@@ -5,6 +5,12 @@ import javafx.scene.control.TextField;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.JSONObject;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptEngine;
+
 
 public class UnitsConverterController {
     @FXML private ComboBox<String> categoryBox;
@@ -18,6 +24,8 @@ public class UnitsConverterController {
 
     @FXML
     public void initialize() {
+        
+        
         // Define unit categories
         unitCategories.put("Length", new String[]{"Meters", "Kilometers", "Feet", "Miles"});
         unitCategories.put("Mass", new String[]{"Grams", "Kilograms", "Pounds"});
@@ -93,5 +101,43 @@ public class UnitsConverterController {
         String temp = fromUnitBox.getValue();
         fromUnitBox.setValue(toUnitBox.getValue());
         toUnitBox.setValue(temp);
+    }
+    
+    
+    public JSONObject loadDataset(){
+         String jsonFile = "src/lightweight/NewDataset.json";
+        try{
+            JSONObject dataset = new JSONObject(new StringBuilder(jsonFile));
+            return dataset;
+            
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    
+     public static double convert(double iv, String fromUnit, String toUnit, JSONObject dataset) {
+        try {
+            JSONObject selectedConversion = dataset.getJSONObject(fromUnit).getJSONObject(toUnit);
+            String baseConv = selectedConversion.getString("toBase");
+            String toConv = selectedConversion.getString("fromBase");
+            
+            // Iv to base unit
+            double baseValue = (double) evalExpression(baseConv.replace("iv", String.valueOf(iv)));
+            
+            // Base value -> result unit
+            double toValue = (double) evalExpression(toConv.replace("iv", String.valueOf(iv)));
+            return toValue;
+        } catch (Exception ex) {
+            Logger.getLogger(UnitsConverterController.class.getName()).log(Level.SEVERE, null, ex);
+            return 0;
+        }
+    }
+
+    private static Object evalExpression(String expression) throws Exception {
+        ScriptEngineManager manager = new ScriptEngineManager();
+        ScriptEngine engine = manager.getEngineByName("js");
+        return engine.eval(expression);
     }
 }

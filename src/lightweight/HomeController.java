@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.animation.FadeTransition;
+import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +14,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * FXML Controller class
@@ -56,33 +59,87 @@ public class HomeController implements Initializable {
     
     public HomeController(){}
 
+    
+    private void switchPaneWithAnimation(VBox newPane, boolean slideLeft) {
+        if (dynamicBox.getChildren().isEmpty()) {
+            dynamicBox.getChildren().add(newPane);
+            return;
+        }
+
+        VBox currentPane = (VBox) dynamicBox.getChildren().get(0);
+
+        double width = dynamicBox.getWidth();
+        double direction = slideLeft ? -1 : 1;
+
+        // Slide out current pane
+        TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), currentPane);
+        slideOut.setFromX(0);
+        slideOut.setToX(direction * width);
+
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), currentPane);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+
+        // Slide in new pane
+        newPane.setTranslateX(-direction * width);  // opposite direction
+        newPane.setOpacity(0.0);
+        TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), newPane);
+        slideIn.setFromX(-direction * width);
+        slideIn.setToX(0);
+
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), newPane);
+        fadeIn.setFromValue(0.0);
+        fadeIn.setToValue(1.0);
+
+        slideOut.setOnFinished(e -> {
+            dynamicBox.getChildren().clear();
+            dynamicBox.getChildren().add(newPane);
+            slideIn.play();
+            fadeIn.play();
+        });
+
+        slideOut.play();
+        fadeOut.play();
+    }
+
     @FXML
     private void loginPage(ActionEvent event) {
-        try{
+        try {
             VBox loginPane = FXMLLoader.load(getClass().getResource("/res/uxLogin.fxml"));
-            dynamicBox.getChildren().set(0, loginPane);
-          
-        }catch(IOException iox){
+            switchPaneWithAnimation(loginPane, false); // slide left
+        } catch (IOException iox) {
             iox.printStackTrace();
         }
     }
+
+    @FXML
+    private void signupPage(ActionEvent event) {
+        try {
+            VBox signUpPane = FXMLLoader.load(getClass().getResource("/res/signupPane.fxml"));
+            switchPaneWithAnimation(signUpPane, true); // slide left
+        } catch (IOException iox) {
+            iox.printStackTrace();
+        }
+    }
+
+    
+    @FXML
+    private void goBack(ActionEvent event) {
+        try {
+            VBox homePane = FXMLLoader.load(getClass().getResource("/res/Home.fxml"));
+            switchPaneWithAnimation(homePage, true); // slide right
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+   
     
     @FXML
     private void minimizeWindow(ActionEvent event){
         Stage stage = (Stage)((javafx.scene.Node) event.getSource()).getScene().getWindow();
     }
 
-    @FXML
-    private void signupPage(ActionEvent event) {
-        try{
-            VBox signUpPane = FXMLLoader.load(getClass().getResource("/res/signupPane.fxml"));
-            dynamicBox.getChildren().set(0, signUpPane);
-            
-        }catch(IOException iox){
-            iox.printStackTrace();
-        }
-    }
-
+    
     @FXML
     private void exitApp(ActionEvent event) {
         System.exit(0);

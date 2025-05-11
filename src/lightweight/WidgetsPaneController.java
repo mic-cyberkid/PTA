@@ -20,6 +20,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class WidgetsPaneController implements Initializable{
 
@@ -119,32 +121,32 @@ public class WidgetsPaneController implements Initializable{
     
     // Method to update password
     @FXML
-    public void updatePassword(ActionEvent event) {
+    public void updatePassword(ActionEvent event) throws Exception {
         if(old_password.getText().isEmpty() || new_password.getText().isEmpty()){
                 infoLabel.setText("Fill all fields!");
                 infoLabel.setStyle("-fx-text-fill: red;");
                 return;
             
         }
-        
+        JSONObject response = new JSONObject();
         try{
-            String newPassword = UtilityMethods.getMD5(new_password.getText());
-            String oldPassword = UtilityMethods.getMD5(old_password.getText());
-            String query = "UPDATE users SET password = ? WHERE username = ? and password = ? ";
-            /*
-            stmt.setString(1, user.getUsername());
-            stmt.setString(0, newPassword);
-            stmt.setString(2, oldPassword);
-            stmt.execute();
-            */
-            infoLabel.setText("Password Changed!");
-            infoLabel.setStyle("-fx-text-fill: lime;");
             
-        }catch(Exception ex){
+            response = ApiFunctions.changePassword(old_password.getText(), new_password.getText());
+            if(response != null){
+                String detail = response.getString("msg");
+                infoLabel.setStyle("-fx-text-fill: lime;");
+                infoLabel.setText(detail);
+            }
+                       
+        }catch(IOException ex){
                 System.out.println("Error: "+ ex);
-                infoLabel.setText("Incorrect Password!");
+                infoLabel.setText("An Error Occurred!");
                 infoLabel.setStyle("-fx-text-fill: red;");
-                //UtilityMethods.showAlert(Alert.AlertType.NONE, "Wrong Password", "Old Password is not corect!");
+
+        }catch(JSONException e){
+            infoLabel.setStyle("-fx-text-fill: red;");
+            String detail = response.getString("detail");
+            infoLabel.setText(detail);
         }
 
     }
@@ -179,7 +181,7 @@ public class WidgetsPaneController implements Initializable{
         }).start();*/
 
         Platform.runLater(() -> {
-            loadConverterPane("res/UnitsConverter.fxml");
+            loadConverterPane("res/Converter.fxml");
         });
         
 

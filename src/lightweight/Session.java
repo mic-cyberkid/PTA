@@ -3,6 +3,15 @@ public class Session {
     private static String authToken;
     private static String conversation_id;
     private static int total_conversations;
+    private static boolean newChat;
+
+    public static boolean isNewChat() {
+        return conversation_id == null;
+    }
+
+    public static void setNewChat(boolean newChat) {
+        Session.newChat = newChat;
+    }
 
     public static int getTotal_conversations() {
         return total_conversations;
@@ -37,6 +46,9 @@ public class Session {
     }
 
     public Session() {
+        if(conversation_id == null){
+            newChat = true;
+        }
     }
     
     
