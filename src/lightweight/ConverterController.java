@@ -115,7 +115,7 @@ public class ConverterController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        // TODO : Use a seperate thread for conversion explanation
         // Clear all tabs except home tab
         MainTab.getTabs().clear();
         MainTab.getTabs().add(homeTab);
