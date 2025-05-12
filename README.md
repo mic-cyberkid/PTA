@@ -82,7 +82,9 @@ The app incorporates the SHS physics curriculum standards, ensuring all lesson p
 
 ## Technologies
 
-- Developed with modern frontend frameworks ensuring cross-platform compatibility  
+- Developed with Java with JavaFX ensuring cross-platform compatibility
+- SQLITE for local data storage.
+- LLM (llama3.2), NLTK, FAISS, FASTAPI for MiddleWare implementations.
 - Offline-first approach to provide uninterrupted access  
 - Clean, user-friendly UI designed for ease of use  
 
@@ -103,7 +105,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Contact
 
 For more information, feedback, or support, contact:  
-YourName – your.email@example.com
+Aaron - 
+Cletus -
+Michael – michael203collins@gmail.com
 
 ---
 
