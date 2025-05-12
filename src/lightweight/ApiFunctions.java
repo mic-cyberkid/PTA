@@ -215,6 +215,43 @@ public class ApiFunctions {
     
         }
     }
+    
+    
+     public static JSONObject explainConversion(String message) throws IOException {
+        String url = BASE_URL + "/conversion";
+        JSONObject body = new JSONObject();
+        body.put("message", message);
+
+        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        connection.setRequestMethod("POST");
+        connection.setDoOutput(true);
+
+        try (OutputStream os = connection.getOutputStream()) {
+            byte[] input = body.toString().getBytes(StandardCharsets.UTF_8);
+            os.write(input, 0, input.length);
+        }
+
+        int responseCode = connection.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            JSONObject responseJson = new JSONObject(response.toString());
+            return responseJson;
+        } else {
+            System.out.println("Error sending message.");
+           
+            UtilityMethods.showAlert(Alert.AlertType.ERROR, "Chat", "Error sending message.");
+            return null;
+    
+        }
+    }
+
 
     // Load conversations
     public static JSONObject loadConversations() throws IOException {

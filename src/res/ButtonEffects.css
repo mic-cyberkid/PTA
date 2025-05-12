@@ -2,7 +2,7 @@
 .button {
     -fx-border-radius: 30px;
     -fx-background-radius: 30px;
-    -fx-effect: innershadow( gaussian , rgba(0, 0, 0, 0.3), 8, 0.0, 2, 2 );
+    /* -fx-effect: innershadow( gaussian , rgba(0, 0, 0, 0.3), 8, 0.0, 2, 2 ); */
     -fx-transition: 0.3s ease-in-out;
 }
 

@@ -6,6 +6,14 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineFactory;
+import javax.script.ScriptEngineManager;
+import javax.script.SimpleScriptContext;
 
 public class LengthConverterApp extends Application {
 
@@ -91,7 +99,25 @@ public class LengthConverterApp extends Application {
         }
     }
 
+    private static Object evalExpression(String expression) throws Exception {
+         // Create a new instance of the Webview and use its engine
+         WebView view = new WebView();
+         WebEngine engine = view.getEngine();
+         Object result = engine.executeScript("eval('"+expression+"');");
+        
+
+        // Use the ScriptEngine to evaluate a string expression
+        System.out.println(result);
+        return result;
+    }
+    
+    
     public static void main(String[] args) {
+        try {
+            evalExpression("2+2");
+        } catch (Exception ex) {
+            Logger.getLogger(LengthConverterApp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         launch(args);
     }
 }

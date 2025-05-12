@@ -174,7 +174,6 @@ public class ChatPaneController implements Initializable {
         chatWebView = new HTMLTextFlow();
         chatWebView.setStyle("-fx-background-coleor:  linear-gradient(to bottom, #2c3e50, #4ca1af); -fx-background-radius: 10px; -fx-border-radius: 10px;");
         //Add custom dragging
-        System.out.println("ChatPane stage :"+stage);
         MainPane.setOnMousePressed(event -> {
             xOffset = event.getSceneX();
             yOffset = event.getSceneY();
@@ -768,7 +767,6 @@ public class ChatPaneController implements Initializable {
             int total_convos = response.getInt("total");
             if(total_convos > 0){
                 JSONArray conversations = response.getJSONArray("messages");
-                System.out.println("JSONArray : "+ conversations);
                 for(Object conversation : conversations){
                     JSONObject chatDesc = (JSONObject) conversation;
                     String chat_id = chatDesc.getString("conversation_id");
@@ -778,7 +776,7 @@ public class ChatPaneController implements Initializable {
                 }
             }else{
                 // Display noHistory pane
-                System.out.println("No Chat history!");
+                
             }
       
         } catch (IOException e) {
@@ -819,11 +817,10 @@ public class ChatPaneController implements Initializable {
             for (int i = 0; i < maxLength; i++) {
                 if (i < userMessages.length()) {
                     addMessage(userMessages.getString(i), true);
-                    System.out.println("User: " + userMessages.getString(i));
                 }
                 if (i < botMessages.length()) {
                     addMessage(botMessages.getString(i), false);
-                    System.out.println("Assistant: " + botMessages.getString(i));
+                    
                 }
             }
  
@@ -911,7 +908,6 @@ public class ChatPaneController implements Initializable {
         Session.setNewChat(newChat);
         
         chatsBox.getChildren().clear();
-        System.out.println("ChatBox : "+ chatsBox);
         chatsBox.getChildren().add(welcomePane);
         chatsBox.setAlignment(Pos.CENTER);
         chatsBox.setFillWidth(false);
@@ -1019,9 +1015,7 @@ public class ChatPaneController implements Initializable {
         prompts.add(promptThree);
         Random rand = new Random();
         int index = rand.nextInt(0, 2);
-        System.out.println("Random integer: "+index);
         String prompt = prompts.get(index).toString();
-        System.out.println("Prompt : "+prompt);
         userMessage.setText(prompt);
         processUserInput();
         

@@ -7,6 +7,8 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 
 public class UtilityMethods {
@@ -64,6 +66,9 @@ public class UtilityMethods {
         Alert alert = new Alert(type);
         alert.setHeaderText(title);
         alert.setContentText(msg);
+        
+        //Set image
+        alert.getDialogPane().setStyle("-fx-font-family: Century; -fx-font-size: 15px; -fx-background-radius: 10; -fx-border-radius: 10;");
         alert.show();
     }
     

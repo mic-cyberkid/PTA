@@ -265,7 +265,7 @@
                   <ProgressIndicator fx:id="chatProgress" prefHeight="30.0" prefWidth="46.0" visible="false" />
                   <TextArea fx:id="userMessage" prefHeight="200.0" prefWidth="200.0" promptText="Message here ...." scaleZ="5.0" stylesheets="@chatPane.css" HBox.hgrow="ALWAYS">
                      <font>
-                        <Font name="Century" size="16.0" />
+                        <Font name="Century" size="19.0" />
                      </font>
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

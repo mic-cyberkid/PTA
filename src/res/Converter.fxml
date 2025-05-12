@@ -7,7 +7,6 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.effect.InnerShadow?>
@@ -15,12 +14,13 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.TextFlow?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="600.0" style="-fx-background-color: linear-gradient(to bottom, #2c3e50, #4ca1af);" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ConverterController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="451.0" prefWidth="600.0" style="-fx-background-color: linear-gradient(to bottom, #2c3e50, #4ca1af);" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ConverterController">
    <center>
-      <TabPane fx:id="MainTab" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <TabPane fx:id="MainTab" prefHeight="440.0" prefWidth="600.0" BorderPane.alignment="CENTER">
         <tabs>
-          <Tab fx:id="homeTab" style="-fx-background-color: grey; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 1);">
+          <Tab fx:id="homeTab" closable="false" style="-fx-background-color: grey; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 1);">
                <content>
                   <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
                      <content>
@@ -28,7 +28,7 @@
                            <children>
                               <HBox alignment="CENTER" prefHeight="129.0" prefWidth="600.0" spacing="10.0" VBox.vgrow="ALWAYS">
                                  <children>
-                                    <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addTemperatureTab" prefHeight="241.0" prefWidth="401.0" style="-fx-background-color: rgba(96,161,195,0.6);" text="Temperature" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                                    <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addTemperatureTab" prefHeight="241.0" prefWidth="401.0" style="-fx-background-color: rgba(96,161,195,0.6); -fx-background-radius: 50;" stylesheets="@ButtonEffects.css" text="Temperature" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                                        <font>
                                           <Font name="Times New Roman" size="33.0" />
                                        </font>
@@ -40,7 +40,7 @@
                                           </InnerShadow>
                                        </effect>
                                     </Button>
-                                    <Button alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#addTimeTab" prefHeight="241.0" prefWidth="401.0" style="-fx-background-color: rgba(96,161,195,0.6);" text="Time" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                                    <Button alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#addTimeTab" prefHeight="241.0" prefWidth="401.0" style="-fx-background-color: rgba(96,161,195,0.6); -fx-background-radius: 50;" stylesheets="@ButtonEffects.css" text="Time" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                                        <font>
                                           <Font name="Times New Roman" size="33.0" />
                                        </font>
@@ -59,7 +59,7 @@
                               </HBox>
                               <HBox alignment="CENTER" layoutX="15.0" layoutY="10.0" prefHeight="129.0" prefWidth="600.0" spacing="10.0" VBox.vgrow="ALWAYS">
                                  <children>
-                                    <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addLengthTab" prefHeight="241.0" prefWidth="401.0" style="-fx-background-color: rgba(96,161,195,0.6);" text="Length" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                                    <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addLengthTab" prefHeight="241.0" prefWidth="401.0" style="-fx-background-color: rgba(96,161,195,0.6); -fx-background-radius: 50;" stylesheets="@ButtonEffects.css" text="Length" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                                        <font>
                                           <Font name="Times New Roman" size="33.0" />
                                        </font>
@@ -71,7 +71,7 @@
                                           </InnerShadow>
                                        </effect>
                                     </Button>
-                                    <Button alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#addAreaTab" prefHeight="241.0" prefWidth="401.0" style="-fx-background-color: rgba(96,161,195,0.6);" text="Area" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                                    <Button alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#addAreaTab" prefHeight="241.0" prefWidth="401.0" style="-fx-background-color: rgba(96,161,195,0.6); -fx-background-radius: 50;" stylesheets="@ButtonEffects.css" text="Area" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                                        <font>
                                           <Font name="Times New Roman" size="33.0" />
                                        </font>
@@ -90,7 +90,7 @@
                               </HBox>
                               <HBox alignment="CENTER" layoutX="10.0" layoutY="201.0" prefHeight="129.0" prefWidth="600.0" spacing="10.0" VBox.vgrow="ALWAYS">
                                  <children>
-                                    <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addVolumeTab" prefHeight="241.0" prefWidth="401.0" style="-fx-background-color: rgba(96,161,195,0.6);" text="Volume" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                                    <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addVolumeTab" prefHeight="241.0" prefWidth="401.0" style="-fx-background-color: rgba(96,161,195,0.6); -fx-background-radius: 50;" stylesheets="@ButtonEffects.css" text="Volume" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                                        <font>
                                           <Font name="Times New Roman" size="33.0" />
                                        </font>
@@ -102,7 +102,7 @@
                                           </InnerShadow>
                                        </effect>
                                     </Button>
-                                    <Button alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#addWeightTab" prefHeight="241.0" prefWidth="401.0" style="-fx-background-color: rgba(96,161,195,0.6);" text="Weight" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                                    <Button alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#addWeightTab" prefHeight="241.0" prefWidth="401.0" style="-fx-background-color: rgba(96,161,195,0.6); -fx-background-radius: 50;" stylesheets="@ButtonEffects.css" text="Weight" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                                        <font>
                                           <Font name="Times New Roman" size="33.0" />
                                        </font>
@@ -159,11 +159,20 @@
                               </HBox>
                            </children>
                         </VBox>
-                        <VBox alignment="CENTER" VBox.vgrow="ALWAYS">
+                        <VBox alignment="CENTER" spacing="10.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <HBox alignment="CENTER" prefHeight="46.0" prefWidth="600.0">
+                              <HBox alignment="CENTER" prefHeight="46.0" prefWidth="600.0" spacing="10.0">
                                  <children>
-                                    <TextField fx:id="tempResult" alignment="CENTER" editable="false" prefHeight="51.0" prefWidth="277.0" promptText="Result">
+                                    <TextField fx:id="tempResult" alignment="CENTER" editable="false" layoutX="172.0" layoutY="10.0" prefHeight="51.0" prefWidth="277.0" promptText="Result">
+                                       <font>
+                                          <Font name="Century" size="28.0" />
+                                       </font>
+                                    </TextField>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="42.0" prefWidth="600.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <TextField fx:id="tempInput" alignment="CENTER" layoutX="172.0" layoutY="10.0" prefHeight="54.0" prefWidth="170.0" promptText="Value">
                                        <font>
                                           <Font name="Century" size="28.0" />
                                        </font>
@@ -179,9 +188,17 @@
                            <children>
                               <HBox alignment="CENTER" prefHeight="55.0" prefWidth="600.0" spacing="20.0">
                                  <children>
-                                    <ComboBox fx:id="tempFromBox" prefWidth="150.0" />
-                                    <ComboBox fx:id="tempToBox" layoutX="235.0" layoutY="39.0" prefWidth="150.0" />
+                                    <ComboBox fx:id="tempFromBox" prefWidth="150.0" style="-fx-background-color: white; -fx-font-family: Century; -fx-font-size: 15;" />
+                                    <Label text="to" textFill="WHITE">
+                                       <font>
+                                          <Font name="Century" size="21.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="tempToBox" layoutX="235.0" layoutY="39.0" prefWidth="150.0" style="-fx-background-color: white; -fx-font-family: Century; -fx-font-size: 15;" />
                                  </children>
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin>
                               </HBox>
                            </children>
                         </VBox>
@@ -194,7 +211,7 @@
                                  <children>
                                     <VBox alignment="CENTER" prefHeight="90.0" prefWidth="199.0" spacing="10.0">
                                        <children>
-                                          <Button mnemonicParsing="false" onAction="#temperatureConvert" prefHeight="42.0" prefWidth="157.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" text="Convert" textFill="WHITE" VBox.vgrow="SOMETIMES">
+                                          <Button mnemonicParsing="false" onAction="#temperatureConvert" prefHeight="42.0" prefWidth="157.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" stylesheets="@buttons.css" text="Convert" textFill="WHITE" VBox.vgrow="SOMETIMES">
                                              <effect>
                                                 <DropShadow />
                                              </effect>
@@ -202,7 +219,7 @@
                                                 <Font name="Century" size="20.0" />
                                              </font>
                                           </Button>
-                                          <Button layoutX="54.0" layoutY="31.0" mnemonicParsing="false" onAction="#temperatureSwap" prefHeight="35.0" prefWidth="112.0" style="-fx-background-color: #5071ab; -fx-background-radius: 10px;" text="Swap" textFill="WHITE">
+                                          <Button layoutX="54.0" layoutY="31.0" mnemonicParsing="false" onAction="#temperatureSwap" prefHeight="35.0" prefWidth="112.0" style="-fx-background-color: #5071ab; -fx-background-radius: 10px;" stylesheets="@buttons.css" text="Swap" textFill="WHITE">
                                              <effect>
                                                 <DropShadow />
                                              </effect>
@@ -216,27 +233,9 @@
                               </HBox>
                            </children>
                         </VBox>
-                        <VBox alignment="CENTER" prefHeight="176.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+                        <VBox alignment="TOP_CENTER" prefHeight="157.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <Label text="Conversion:" textFill="WHITE" VBox.vgrow="ALWAYS">
-                                 <font>
-                                    <Font name="Century" size="18.0" />
-                                 </font>
-                              </Label>
-                              <VBox>
-                                 <children>
-                                    <HBox alignment="CENTER">
-                                       <children>
-                                          <TextArea fx:id="tempExplainArea" prefHeight="95.0" prefWidth="404.0" promptText="Conversion Explained">
-                                             <font>
-                                                <Font name="Century" size="16.0" />
-                                             </font>
-                                          </TextArea>
-                                       </children>
-                                    </HBox>
-                                 </children>
-                              </VBox>
-                              <Button mnemonicParsing="false" onAction="#temperatureExplain" prefHeight="41.0" prefWidth="110.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" text="Explain" textFill="WHITE" VBox.vgrow="ALWAYS">
+                              <Button mnemonicParsing="false" onAction="#temperatureExplain" prefHeight="41.0" prefWidth="110.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" stylesheets="@buttons.css" text="Explain" textFill="WHITE" VBox.vgrow="ALWAYS">
                                  <font>
                                     <Font name="Century" size="16.0" />
                                  </font>
@@ -247,6 +246,16 @@
                                     <Insets bottom="5.0" top="5.0" />
                                  </VBox.margin>
                               </Button>
+                              <Label text="Conversion:" textFill="WHITE" VBox.vgrow="ALWAYS">
+                                 <font>
+                                    <Font name="Century" size="18.0" />
+                                 </font>
+                              </Label>
+                              <VBox fx:id="tempExplainArea" prefHeight="200.0" prefWidth="100.0" style="-fx-font-size: 19; -fx-font-family: Century;">
+                                 <children>
+                                    <TextFlow prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
                            </children>
                         </VBox>
                      </children>
@@ -262,7 +271,7 @@
                   </Label>
                </graphic>
                <content>
-                  <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #4ca1af;">
+                  <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #2c3e50;">
                      <children>
                         <VBox VBox.vgrow="ALWAYS">
                            <children>
@@ -277,7 +286,7 @@
                               </HBox>
                            </children>
                         </VBox>
-                        <VBox VBox.vgrow="ALWAYS">
+                        <VBox spacing="10.0" VBox.vgrow="ALWAYS">
                            <children>
                               <HBox alignment="CENTER" prefHeight="46.0" prefWidth="600.0">
                                  <children>
@@ -288,7 +297,19 @@
                                     </TextField>
                                  </children>
                               </HBox>
+                              <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="46.0" prefWidth="600.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <TextField fx:id="timeInput" alignment="CENTER" prefHeight="54.0" prefWidth="170.0" promptText="Value">
+                                       <font>
+                                          <Font name="Century" size="28.0" />
+                                       </font>
+                                    </TextField>
+                                 </children>
+                              </HBox>
                            </children>
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
                         </VBox>
                         <VBox VBox.vgrow="ALWAYS">
                            <VBox.margin>
@@ -297,9 +318,17 @@
                            <children>
                               <HBox alignment="CENTER" prefHeight="55.0" prefWidth="600.0" spacing="20.0">
                                  <children>
-                                    <ComboBox fx:id="timeFromBox" prefWidth="150.0" />
-                                    <ComboBox fx:id="timeToBox" layoutX="235.0" layoutY="39.0" prefWidth="150.0" />
+                                    <ComboBox fx:id="timeFromBox" prefWidth="150.0" style="-fx-background-color: white; -fx-font-family: Century; -fx-font-size: 15;" />
+                                    <Label text="to" textFill="WHITE">
+                                       <font>
+                                          <Font name="Century" size="21.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="timeToBox" layoutX="235.0" layoutY="39.0" prefWidth="150.0" style="-fx-background-color: white; -fx-font-family: Century; -fx-font-size: 15;" />
                                  </children>
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin>
                               </HBox>
                            </children>
                         </VBox>
@@ -308,11 +337,11 @@
                               <Insets bottom="5.0" />
                            </VBox.margin>
                            <children>
-                              <HBox alignment="CENTER" prefHeight="88.0" prefWidth="600.0" spacing="20.0">
+                              <HBox alignment="CENTER" prefHeight="88.0" prefWidth="600.0" spacing="20.0" VBox.vgrow="ALWAYS">
                                  <children>
                                     <VBox alignment="CENTER" prefHeight="90.0" prefWidth="199.0" spacing="10.0">
                                        <children>
-                                          <Button mnemonicParsing="false" onAction="#timeConvert" prefHeight="42.0" prefWidth="157.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" text="Convert" textFill="WHITE" VBox.vgrow="SOMETIMES">
+                                          <Button mnemonicParsing="false" onAction="#timeConvert" prefHeight="42.0" prefWidth="157.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" stylesheets="@buttons.css" text="Convert" textFill="WHITE" VBox.vgrow="SOMETIMES">
                                              <effect>
                                                 <DropShadow />
                                              </effect>
@@ -320,7 +349,7 @@
                                                 <Font name="Century" size="20.0" />
                                              </font>
                                           </Button>
-                                          <Button layoutX="54.0" layoutY="31.0" mnemonicParsing="false" onAction="#timeSwap" prefHeight="35.0" prefWidth="112.0" style="-fx-background-color: #5071ab; -fx-background-radius: 10px;" text="Swap" textFill="WHITE">
+                                          <Button layoutX="54.0" layoutY="31.0" mnemonicParsing="false" onAction="#timeSwap" prefHeight="35.0" prefWidth="112.0" style="-fx-background-color: #5071ab; -fx-background-radius: 10px;" stylesheets="@buttons.css" text="Swap" textFill="WHITE">
                                              <effect>
                                                 <DropShadow />
                                              </effect>
@@ -334,27 +363,9 @@
                               </HBox>
                            </children>
                         </VBox>
-                        <VBox alignment="CENTER" prefHeight="176.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+                        <VBox alignment="TOP_CENTER" prefHeight="176.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <Label text="Conversion:" textFill="WHITE" VBox.vgrow="ALWAYS">
-                                 <font>
-                                    <Font name="Century" size="18.0" />
-                                 </font>
-                              </Label>
-                              <VBox>
-                                 <children>
-                                    <HBox alignment="CENTER">
-                                       <children>
-                                          <TextArea fx:id="timeExplainArea" prefHeight="95.0" prefWidth="404.0" promptText="Conversion Explained">
-                                             <font>
-                                                <Font name="Century" size="16.0" />
-                                             </font>
-                                          </TextArea>
-                                       </children>
-                                    </HBox>
-                                 </children>
-                              </VBox>
-                              <Button mnemonicParsing="false" onAction="#timeExplain" prefHeight="41.0" prefWidth="110.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" text="Explain" textFill="WHITE" VBox.vgrow="ALWAYS">
+                              <Button mnemonicParsing="false" onAction="#timeExplain" prefHeight="41.0" prefWidth="110.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" stylesheets="@buttons.css" text="Explain" textFill="WHITE" VBox.vgrow="ALWAYS">
                                  <font>
                                     <Font name="Century" size="16.0" />
                                  </font>
@@ -365,6 +376,12 @@
                                     <Insets bottom="5.0" top="5.0" />
                                  </VBox.margin>
                               </Button>
+                              <Label text="Conversion:" textFill="WHITE" VBox.vgrow="ALWAYS">
+                                 <font>
+                                    <Font name="Century" size="18.0" />
+                                 </font>
+                              </Label>
+                              <VBox fx:id="timeExplainArea" prefHeight="200.0" prefWidth="100.0" style="-fx-font-family: Century; -fx-font-size: 19;" />
                            </children>
                         </VBox>
                      </children>
@@ -380,7 +397,7 @@
                   </Label>
                </graphic>
                <content>
-                  <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #4ca1af;">
+                  <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #2c3e50;">
                      <children>
                         <VBox VBox.vgrow="ALWAYS">
                            <children>
@@ -395,7 +412,7 @@
                               </HBox>
                            </children>
                         </VBox>
-                        <VBox VBox.vgrow="ALWAYS">
+                        <VBox spacing="10.0" VBox.vgrow="ALWAYS">
                            <children>
                               <HBox alignment="CENTER" prefHeight="46.0" prefWidth="600.0">
                                  <children>
@@ -406,7 +423,19 @@
                                     </TextField>
                                  </children>
                               </HBox>
+                              <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="46.0" prefWidth="600.0">
+                                 <children>
+                                    <TextField fx:id="lengthInput" alignment="CENTER" prefHeight="54.0" prefWidth="170.0" promptText="Value">
+                                       <font>
+                                          <Font name="Century" size="28.0" />
+                                       </font>
+                                    </TextField>
+                                 </children>
+                              </HBox>
                            </children>
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
                         </VBox>
                         <VBox VBox.vgrow="ALWAYS">
                            <VBox.margin>
@@ -415,9 +444,17 @@
                            <children>
                               <HBox alignment="CENTER" prefHeight="55.0" prefWidth="600.0" spacing="20.0">
                                  <children>
-                                    <ComboBox fx:id="lengthFromBox" prefWidth="150.0" />
-                                    <ComboBox fx:id="lengthToBox" layoutX="235.0" layoutY="39.0" prefWidth="150.0" />
+                                    <ComboBox fx:id="lengthFromBox" prefWidth="150.0" style="-fx-background-color: white; -fx-font-family: Century; -fx-font-size: 15;" />
+                                    <Label text="to" textFill="WHITE">
+                                       <font>
+                                          <Font name="Century" size="21.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="lengthToBox" layoutX="235.0" layoutY="39.0" prefWidth="150.0" style="-fx-background-color: white; -fx-font-family: Century; -fx-font-size: 15;" />
                                  </children>
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin>
                               </HBox>
                            </children>
                         </VBox>
@@ -430,7 +467,7 @@
                                  <children>
                                     <VBox alignment="CENTER" prefHeight="90.0" prefWidth="199.0" spacing="10.0">
                                        <children>
-                                          <Button mnemonicParsing="false" onAction="#lengthConvert" prefHeight="42.0" prefWidth="157.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" text="Convert" textFill="WHITE" VBox.vgrow="SOMETIMES">
+                                          <Button mnemonicParsing="false" onAction="#lengthConvert" prefHeight="42.0" prefWidth="157.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" stylesheets="@buttons.css" text="Convert" textFill="WHITE" VBox.vgrow="SOMETIMES">
                                              <effect>
                                                 <DropShadow />
                                              </effect>
@@ -438,7 +475,7 @@
                                                 <Font name="Century" size="20.0" />
                                              </font>
                                           </Button>
-                                          <Button layoutX="54.0" layoutY="31.0" mnemonicParsing="false" onAction="#lengthSwap" prefHeight="35.0" prefWidth="112.0" style="-fx-background-color: #5071ab; -fx-background-radius: 10px;" text="Swap" textFill="WHITE">
+                                          <Button layoutX="54.0" layoutY="31.0" mnemonicParsing="false" onAction="#lengthSwap" prefHeight="35.0" prefWidth="112.0" style="-fx-background-color: #5071ab; -fx-background-radius: 10px;" stylesheets="@buttons.css" text="Swap" textFill="WHITE">
                                              <effect>
                                                 <DropShadow />
                                              </effect>
@@ -454,23 +491,9 @@
                         </VBox>
                         <VBox VBox.vgrow="ALWAYS">
                            <children>
-                              <VBox alignment="CENTER" prefHeight="176.0" prefWidth="600.0">
+                              <VBox alignment="TOP_CENTER" prefHeight="176.0" prefWidth="600.0">
                                  <children>
-                                    <Label text="Conversion:" textFill="WHITE" VBox.vgrow="ALWAYS">
-                                       <font>
-                                          <Font name="Century" size="18.0" />
-                                       </font>
-                                    </Label>
-                                    <HBox alignment="CENTER">
-                                       <children>
-                                          <TextArea fx:id="lengthExplainArea" prefHeight="95.0" prefWidth="404.0" promptText="Conversion Explained">
-                                             <font>
-                                                <Font name="Century" size="16.0" />
-                                             </font>
-                                          </TextArea>
-                                       </children>
-                                    </HBox>
-                                    <Button mnemonicParsing="false" onAction="#lengthExplain" prefHeight="41.0" prefWidth="110.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" text="Explain" textFill="WHITE" VBox.vgrow="ALWAYS">
+                                    <Button mnemonicParsing="false" onAction="#lengthExplain" prefHeight="41.0" prefWidth="110.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" stylesheets="@buttons.css" text="Explain" textFill="WHITE" VBox.vgrow="ALWAYS">
                                        <font>
                                           <Font name="Century" size="16.0" />
                                        </font>
@@ -478,9 +501,15 @@
                                           <DropShadow />
                                        </effect>
                                        <VBox.margin>
-                                          <Insets bottom="5.0" top="5.0" />
+                                          <Insets />
                                        </VBox.margin>
                                     </Button>
+                                    <Label text="Conversion:" textFill="WHITE" VBox.vgrow="ALWAYS">
+                                       <font>
+                                          <Font name="Century" size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <VBox fx:id="lengthExplainArea" prefHeight="200.0" prefWidth="100.0" style="-fx-font-size: 19; -fx-font-family: Century;" />
                                  </children>
                               </VBox>
                            </children>
@@ -489,7 +518,7 @@
                   </VBox>
                </content>
             </Tab>
-            <Tab fx:id="areaTab" style="-fx-background-color: #2fae15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 1);">
+            <Tab fx:id="areaTab" style="-fx-background-color: #61bf49; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 1);">
                <graphic>
                   <Label text="Area" textFill="WHITE">
                      <font>
@@ -498,7 +527,7 @@
                   </Label>
                </graphic>
                <content>
-                  <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #4ca1af;">
+                  <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #2c3e50;">
                      <children>
                         <VBox VBox.vgrow="ALWAYS">
                            <children>
@@ -513,7 +542,7 @@
                               </HBox>
                            </children>
                         </VBox>
-                        <VBox VBox.vgrow="ALWAYS">
+                        <VBox spacing="10.0" VBox.vgrow="ALWAYS">
                            <children>
                               <HBox alignment="CENTER" prefHeight="46.0" prefWidth="600.0">
                                  <children>
@@ -524,7 +553,19 @@
                                     </TextField>
                                  </children>
                               </HBox>
+                              <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="46.0" prefWidth="600.0">
+                                 <children>
+                                    <TextField fx:id="areaInput" alignment="CENTER" prefHeight="54.0" prefWidth="170.0" promptText="Value">
+                                       <font>
+                                          <Font name="Century" size="28.0" />
+                                       </font>
+                                    </TextField>
+                                 </children>
+                              </HBox>
                            </children>
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
                         </VBox>
                         <VBox VBox.vgrow="ALWAYS">
                            <VBox.margin>
@@ -533,9 +574,17 @@
                            <children>
                               <HBox alignment="CENTER" prefHeight="55.0" prefWidth="600.0" spacing="20.0">
                                  <children>
-                                    <ComboBox fx:id="areaFromBox" prefWidth="150.0" />
-                                    <ComboBox fx:id="areaToBox" layoutX="235.0" layoutY="39.0" prefWidth="150.0" />
+                                    <ComboBox fx:id="areaFromBox" prefWidth="150.0" style="-fx-background-color: white; -fx-font-family: Century; -fx-font-size: 15;" />
+                                    <Label text="to" textFill="WHITE">
+                                       <font>
+                                          <Font name="Century" size="21.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="areaToBox" layoutX="235.0" layoutY="39.0" prefWidth="150.0" style="-fx-background-color: white; -fx-font-size: 15; -fx-font-family: Century;" />
                                  </children>
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin>
                               </HBox>
                            </children>
                         </VBox>
@@ -548,7 +597,7 @@
                                  <children>
                                     <VBox alignment="CENTER" prefHeight="90.0" prefWidth="199.0" spacing="10.0">
                                        <children>
-                                          <Button mnemonicParsing="false" onAction="#areaConvert" prefHeight="42.0" prefWidth="157.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" text="Convert" textFill="WHITE" VBox.vgrow="SOMETIMES">
+                                          <Button mnemonicParsing="false" onAction="#areaConvert" prefHeight="42.0" prefWidth="157.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" stylesheets="@buttons.css" text="Convert" textFill="WHITE" VBox.vgrow="SOMETIMES">
                                              <effect>
                                                 <DropShadow />
                                              </effect>
@@ -556,7 +605,7 @@
                                                 <Font name="Century" size="20.0" />
                                              </font>
                                           </Button>
-                                          <Button layoutX="54.0" layoutY="31.0" mnemonicParsing="false" onAction="#areaSwap" prefHeight="35.0" prefWidth="112.0" style="-fx-background-color: #5071ab; -fx-background-radius: 10px;" text="Swap" textFill="WHITE">
+                                          <Button layoutX="54.0" layoutY="31.0" mnemonicParsing="false" onAction="#areaSwap" prefHeight="35.0" prefWidth="112.0" style="-fx-background-color: #5071ab; -fx-background-radius: 10px;" stylesheets="@buttons.css" text="Swap" textFill="WHITE">
                                              <effect>
                                                 <DropShadow />
                                              </effect>
@@ -570,23 +619,9 @@
                               </HBox>
                            </children>
                         </VBox>
-                        <VBox alignment="CENTER" prefHeight="176.0" prefWidth="600.0">
+                        <VBox alignment="TOP_CENTER" prefHeight="176.0" prefWidth="600.0">
                            <children>
-                              <Label text="Conversion:" textFill="WHITE" VBox.vgrow="ALWAYS">
-                                 <font>
-                                    <Font name="Century" size="18.0" />
-                                 </font>
-                              </Label>
-                              <HBox alignment="CENTER">
-                                 <children>
-                                    <TextArea fx:id="areaExplainArea" prefHeight="95.0" prefWidth="404.0" promptText="Conversion Explained">
-                                       <font>
-                                          <Font name="Century" size="16.0" />
-                                       </font>
-                                    </TextArea>
-                                 </children>
-                              </HBox>
-                              <Button mnemonicParsing="false" onAction="#areaExplain" prefHeight="41.0" prefWidth="110.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" text="Explain" textFill="WHITE" VBox.vgrow="ALWAYS">
+                              <Button mnemonicParsing="false" onAction="#areaExplain" prefHeight="41.0" prefWidth="110.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" stylesheets="@buttons.css" text="Explain" textFill="WHITE" VBox.vgrow="ALWAYS">
                                  <font>
                                     <Font name="Century" size="16.0" />
                                  </font>
@@ -597,13 +632,19 @@
                                     <Insets bottom="5.0" top="5.0" />
                                  </VBox.margin>
                               </Button>
+                              <Label text="Conversion:" textFill="WHITE" VBox.vgrow="ALWAYS">
+                                 <font>
+                                    <Font name="Century" size="18.0" />
+                                 </font>
+                              </Label>
+                              <VBox fx:id="areaExplainArea" prefHeight="200.0" prefWidth="100.0" style="-fx-font-size: 19; -fx-font-family: Century;" />
                            </children>
                         </VBox>
                      </children>
                   </VBox>
                </content>
             </Tab>
-            <Tab fx:id="weightTab" style="-fx-background-color: blue; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 1);">
+            <Tab fx:id="weightTab" style="-fx-background-color: #5071ab; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 1);">
                <graphic>
                   <Label text="Weight" textFill="WHITE">
                      <font>
@@ -612,7 +653,7 @@
                   </Label>
                </graphic>
                <content>
-                  <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #4ca1af;">
+                  <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #2c3e50;">
                      <children>
                         <VBox>
                            <children>
@@ -627,7 +668,7 @@
                               </HBox>
                            </children>
                         </VBox>
-                        <VBox VBox.vgrow="ALWAYS">
+                        <VBox spacing="10.0" VBox.vgrow="ALWAYS">
                            <children>
                               <HBox alignment="CENTER" prefHeight="46.0" prefWidth="600.0">
                                  <children>
@@ -638,6 +679,18 @@
                                     </TextField>
                                  </children>
                               </HBox>
+                              <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="46.0" prefWidth="600.0" spacing="10.0">
+                                 <children>
+                                    <TextField fx:id="weightInput" alignment="CENTER" prefHeight="54.0" prefWidth="170.0" promptText="Value">
+                                       <font>
+                                          <Font name="Century" size="28.0" />
+                                       </font>
+                                    </TextField>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin>
+                              </HBox>
                            </children>
                         </VBox>
                         <VBox VBox.vgrow="ALWAYS">
@@ -647,9 +700,20 @@
                            <children>
                               <HBox alignment="CENTER" prefHeight="55.0" prefWidth="600.0" spacing="20.0">
                                  <children>
-                                    <ComboBox fx:id="weightFromBox" prefWidth="150.0" />
-                                    <ComboBox fx:id="weightToBox" layoutX="235.0" layoutY="39.0" prefWidth="150.0" />
+                                    <ComboBox fx:id="weightFromBox" prefWidth="150.0" style="-fx-background-color: white; -fx-font-size: 15; -fx-font-family: Century;">
+                                       <effect>
+                                          <DropShadow />
+                                       </effect></ComboBox>
+                                    <Label text="to" textFill="WHITE">
+                                       <font>
+                                          <Font name="Century" size="21.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="weightToBox" layoutX="235.0" layoutY="39.0" prefWidth="150.0" style="-fx-background-color: white; -fx-font-family: Century; -fx-font-size: 15;" />
                                  </children>
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin>
                               </HBox>
                            </children>
                         </VBox>
@@ -662,7 +726,7 @@
                                  <children>
                                     <VBox alignment="CENTER" prefHeight="90.0" prefWidth="199.0" spacing="10.0">
                                        <children>
-                                          <Button mnemonicParsing="false" onAction="#weightConvert" prefHeight="42.0" prefWidth="157.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" text="Convert" textFill="WHITE" VBox.vgrow="SOMETIMES">
+                                          <Button mnemonicParsing="false" onAction="#weightConvert" prefHeight="42.0" prefWidth="157.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" stylesheets="@buttons.css" text="Convert" textFill="WHITE" VBox.vgrow="SOMETIMES">
                                              <effect>
                                                 <DropShadow />
                                              </effect>
@@ -670,7 +734,7 @@
                                                 <Font name="Century" size="20.0" />
                                              </font>
                                           </Button>
-                                          <Button layoutX="54.0" layoutY="31.0" mnemonicParsing="false" onAction="#weightSwap" prefHeight="35.0" prefWidth="112.0" style="-fx-background-color: #5071ab; -fx-background-radius: 10px;" text="Swap" textFill="WHITE">
+                                          <Button layoutX="54.0" layoutY="31.0" mnemonicParsing="false" onAction="#weightSwap" prefHeight="35.0" prefWidth="112.0" style="-fx-background-color: #5071ab; -fx-background-radius: 10px;" stylesheets="@buttons.css" text="Swap" textFill="WHITE">
                                              <effect>
                                                 <DropShadow />
                                              </effect>
@@ -684,23 +748,9 @@
                               </HBox>
                            </children>
                         </VBox>
-                        <VBox alignment="CENTER" prefHeight="176.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+                        <VBox alignment="TOP_CENTER" prefHeight="176.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <Label text="Conversion:" textFill="WHITE" VBox.vgrow="ALWAYS">
-                                 <font>
-                                    <Font name="Century" size="18.0" />
-                                 </font>
-                              </Label>
-                              <HBox alignment="CENTER">
-                                 <children>
-                                    <TextArea fx:id="weightExplainArea" prefHeight="95.0" prefWidth="404.0" promptText="Conversion Explained">
-                                       <font>
-                                          <Font name="Century" size="16.0" />
-                                       </font>
-                                    </TextArea>
-                                 </children>
-                              </HBox>
-                              <Button mnemonicParsing="false" onAction="#weightExplain" prefHeight="41.0" prefWidth="110.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" text="Explain" textFill="WHITE" VBox.vgrow="ALWAYS">
+                              <Button mnemonicParsing="false" onAction="#weightExplain" prefHeight="41.0" prefWidth="110.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" stylesheets="@buttons.css" text="Explain" textFill="WHITE" VBox.vgrow="ALWAYS">
                                  <font>
                                     <Font name="Century" size="16.0" />
                                  </font>
@@ -711,6 +761,12 @@
                                     <Insets bottom="5.0" top="5.0" />
                                  </VBox.margin>
                               </Button>
+                              <Label text="Conversion:" textFill="WHITE" VBox.vgrow="ALWAYS">
+                                 <font>
+                                    <Font name="Century" size="18.0" />
+                                 </font>
+                              </Label>
+                              <VBox fx:id="weightExplainArea" prefHeight="200.0" prefWidth="100.0" style="-fx-font-family: Century; -fx-font-size: 19;" />
                            </children>
                         </VBox>
                      </children>
@@ -726,7 +782,7 @@
                   </Label>
                </graphic>
                <content>
-                  <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #4ca1af;">
+                  <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #2c3e50;">
                      <children>
                         <VBox VBox.vgrow="ALWAYS">
                            <children>
@@ -741,7 +797,7 @@
                               </HBox>
                            </children>
                         </VBox>
-                        <VBox VBox.vgrow="ALWAYS">
+                        <VBox spacing="10.0" VBox.vgrow="ALWAYS">
                            <children>
                               <HBox alignment="CENTER" prefHeight="46.0" prefWidth="600.0">
                                  <children>
@@ -752,7 +808,19 @@
                                     </TextField>
                                  </children>
                               </HBox>
+                              <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="46.0" prefWidth="600.0">
+                                 <children>
+                                    <TextField fx:id="volumeInput" alignment="CENTER" prefHeight="54.0" prefWidth="170.0" promptText="Value">
+                                       <font>
+                                          <Font name="Century" size="28.0" />
+                                       </font>
+                                    </TextField>
+                                 </children>
+                              </HBox>
                            </children>
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
                         </VBox>
                         <VBox VBox.vgrow="ALWAYS">
                            <VBox.margin>
@@ -761,9 +829,20 @@
                            <children>
                               <HBox alignment="CENTER" prefHeight="55.0" prefWidth="600.0" spacing="20.0">
                                  <children>
-                                    <ComboBox fx:id="volumeFromBox" prefWidth="150.0" />
-                                    <ComboBox fx:id="volumeToBox" layoutX="235.0" layoutY="39.0" prefWidth="150.0" />
+                                    <ComboBox fx:id="volumeFromBox" prefWidth="150.0" style="-fx-background-color: white; -fx-font-size: 15; -fx-font-family: Century;">
+                                       <effect>
+                                          <DropShadow />
+                                       </effect></ComboBox>
+                                    <Label text="to" textFill="WHITE">
+                                       <font>
+                                          <Font name="Century" size="21.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="volumeToBox" layoutX="235.0" layoutY="39.0" prefWidth="150.0" style="-fx-background-color: white; -fx-font-size: 15; -fx-font-family: Cnetury;" />
                                  </children>
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin>
                               </HBox>
                            </children>
                         </VBox>
@@ -776,7 +855,7 @@
                                  <children>
                                     <VBox alignment="CENTER" prefHeight="90.0" prefWidth="199.0" spacing="10.0">
                                        <children>
-                                          <Button mnemonicParsing="false" onAction="#volumeConvert" prefHeight="42.0" prefWidth="157.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" text="Convert" textFill="WHITE" VBox.vgrow="SOMETIMES">
+                                          <Button mnemonicParsing="false" onAction="#volumeConvert" prefHeight="42.0" prefWidth="157.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" stylesheets="@buttons.css" text="Convert" textFill="WHITE" VBox.vgrow="SOMETIMES">
                                              <effect>
                                                 <DropShadow />
                                              </effect>
@@ -784,7 +863,7 @@
                                                 <Font name="Century" size="20.0" />
                                              </font>
                                           </Button>
-                                          <Button layoutX="54.0" layoutY="31.0" mnemonicParsing="false" onAction="#volumeSwap" prefHeight="35.0" prefWidth="112.0" style="-fx-background-color: #5071ab; -fx-background-radius: 10px;" text="Swap" textFill="WHITE">
+                                          <Button layoutX="54.0" layoutY="31.0" mnemonicParsing="false" onAction="#volumeSwap" prefHeight="35.0" prefWidth="112.0" style="-fx-background-color: #5071ab; -fx-background-radius: 10px;" stylesheets="@buttons.css" text="Swap" textFill="WHITE">
                                              <effect>
                                                 <DropShadow />
                                              </effect>
@@ -802,21 +881,7 @@
                            <children>
                               <VBox alignment="CENTER" prefHeight="176.0" prefWidth="600.0">
                                  <children>
-                                    <Label text="Conversion:" textFill="WHITE" VBox.vgrow="ALWAYS">
-                                       <font>
-                                          <Font name="Century" size="18.0" />
-                                       </font>
-                                    </Label>
-                                    <HBox alignment="CENTER">
-                                       <children>
-                                          <TextArea fx:id="volumeExplainArea" prefHeight="95.0" prefWidth="404.0" promptText="Conversion Explained">
-                                             <font>
-                                                <Font name="Century" size="16.0" />
-                                             </font>
-                                          </TextArea>
-                                       </children>
-                                    </HBox>
-                                    <Button mnemonicParsing="false" onAction="#volumeExplain" prefHeight="41.0" prefWidth="110.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" text="Explain" textFill="WHITE" VBox.vgrow="ALWAYS">
+                                    <Button mnemonicParsing="false" onAction="#volumeExplain" prefHeight="41.0" prefWidth="110.0" style="-fx-background-color: #61bf49; -fx-background-radius: 10px;" stylesheets="@buttons.css" text="Explain" textFill="WHITE" VBox.vgrow="ALWAYS">
                                        <font>
                                           <Font name="Century" size="16.0" />
                                        </font>
@@ -827,6 +892,12 @@
                                           <Insets bottom="5.0" top="5.0" />
                                        </VBox.margin>
                                     </Button>
+                                    <Label text="Conversion:" textFill="WHITE">
+                                       <font>
+                                          <Font name="Century" size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <VBox fx:id="volumeExplainArea" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-font-size: 19; -fx-font-family: Century;" VBox.vgrow="ALWAYS" />
                                  </children>
                               </VBox>
                            </children>
