@@ -39,6 +39,9 @@ The app incorporates the SHS physics curriculum standards, ensuring all lesson p
 ![SignUp Page](./test/images/Signup.png)
 *Signup Page.*
 
+![Chat Home Page](./test/images/ChatHome.png)
+*Chat Interface.*
+
 ![Offline Mode Screenshot](./test/images/OfflineUse.png)  
 *Using the app easily without internet connection.*
 
