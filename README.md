@@ -105,9 +105,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Contact
 
 For more information, feedback, or support, contact:  
-Aaron - 
-Cletus -
-Michael – michael203collins@gmail.com
+Aaron - https://github.com/quami09
+Cletus -  https://github.com/Bindiinin
+Michael – michael203collins@gmail.com -
 
 ---
 
