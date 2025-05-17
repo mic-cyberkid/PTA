@@ -43,42 +43,47 @@ public class MermaidOfflineExample extends Application {
             "</head>" +
             "<body>" +
             "<div class='mermaid'>" +
-            "graph LR\n" +
+            "flowchart TD\n" +
             "    A--> B\n" +
             "    A-->C\n" +
             "    B-->D\n" +
             "    C-->Data" +
             "</div>" + """
                        <div class='mermaid'>
-                           graph LR\n
-                             A --> Review of Motion\n
-                             B --> Definition and Importance of Kinematics\n
-                             C --> Distance, Displacement, Speed, Velocity, Acceleration \n
-                             D -->Solving for Distance and Displacement \n
-                             E --> Problem Set: Review and Apply Key Concepts \n
-                       
-                             A --> Linear vs. Non-Linear Motion \n
-                             B --> Uniform, Variable, and Circular Motion \n
-                             C --> Real-Life Applications of Each Type of Motion \n
-                             D --> Identifying the Type of Motion in a Scenario \n
-                             E --> Problem Set: Apply Kinematic Concepts to Real-Life Situations \n
-                       
-                             A --> Distance Formula  \n
-                             B --> Solving for Distance Using the Formula \n
-                             C --> Calculating Distances in Everyday Life \n
-                             D --> Finding Distance Using a Diagram \n
-                             E --> Problem Set: Applying Distance Formulas \n
-                       
-                             A --> Velocity Formula  \n
-                             B --> Solving for Velocity Using the Formula \n
-                             C --> Understanding Velocity Graphs \n
-                             D --> Finding Acceleration from Velocity Data \n
-                             E --> Problem Set: Applying Velocity Formulas \n\n
-                       
-                             A --> Review of Key Concepts \n
-                             B --> Application Problems with Answers \n
-                             C --> Formal Assessment of Kinematic Understanding \n
-                             E --> Reflection on Progress and Future Learning \n
+                           flowchart TD
+                                 %% Swimlanes (invisible grouping)
+                                 subgraph User
+                                     A[Start] --> B[User Authentication]
+                                     B -->|Login/Register| C[Post Item]
+                                     F -->|Search| G[Item Detail Page]
+                                     G --> H[Message Seller]
+                                     G --> I[Add to Wishlist]
+                                     G --> J[Buy Now]
+                                     K[View Wishlist] --> G
+                                 end
+                             
+                                 subgraph System
+                                     C --> D{Admin Approval?}
+                                     D -->|Yes| E[Save to Database]
+                                     D -->|No| C
+                                     E --> F[Browsing & Search]
+                                     H --> L[Messaging Inbox]
+                                     J --> M[Mark as Purchased]
+                                     M --> N[Notify Seller]
+                                     O[Flag Item] --> D
+                                 end
+                             
+                                 subgraph Admin
+                                     P[Admin Dashboard] -->|Review Items| D
+                                     P -->|Manage Users| B
+                                     P -->|Check Reports| O
+                                     Q[Send Notifications] --> N
+                                 end
+                             
+                                 %% Styling
+                                 style User fill:#f9f9f9,stroke:#eee
+                                 style System fill:#f0f7ff,stroke:#ccc
+                                 style Admin fill:#fff0f0,stroke:#ccc \n
                          </div>
                        """+
                 " <p>Inline math: \\( a^2 + b^2 = c^2 \\)</p>\n" +

@@ -1,16 +1,11 @@
 import com.google.gson.Gson;
+import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.UUID;
 import javafx.animation.ScaleTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -41,16 +36,11 @@ import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Random;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.function.Consumer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -64,10 +54,17 @@ import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import netscape.javascript.JSObject;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.InputStream;
+import java.lang.ref.WeakReference;
+import javafx.scene.Node;
 /**
  * FXML Controller class
  *
@@ -144,6 +141,9 @@ public class ChatPaneController implements Initializable {
     private boolean isDragging = false;
     private boolean isMaximized = false;
     private double prevWidth, prevHeight, prevX, prevY;
+    private Timeline blinkTimeline;
+    
+    
     @FXML
     private Button createQuizPrompt;
     @FXML
@@ -154,9 +154,16 @@ public class ChatPaneController implements Initializable {
     
     private WebEngine webEngine;
     private boolean newChat;
-    
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
+    private Future<?> currentStreamTask;
 
+
+    private final Consumer<String> onChunk = null;
+    private final Runnable onComplete = null;
     
+    private volatile boolean stopStreaming = false;
+    private volatile boolean isStreaming = false;
+    private Thread streamingThread;
 
     /**
      * Initializes the controller class.
@@ -172,150 +179,25 @@ public class ChatPaneController implements Initializable {
         newChat = true;
         // Initialize Variables and User Interface
         chatWebView = new HTMLTextFlow();
+        String  html = getClass().getResource("res/TestMarkdown.html").toExternalForm();
+        System.out.println("Path:"+html);
+        
+        
+        
+
+        // Create the WebEngine to handle HTML/JS content
+        webEngine = chatWebView.getWebEngine();
+        webEngine.load(html);
+        webEngine.setJavaScriptEnabled(true);
+        webEngine.setUserDataDirectory(new File("C:/temp/webview"));
+        webEngine.setOnAlert(event -> {
+            System.out.println("JS Alert: " + event.getData());
+        });
+        
         chatWebView.setStyle("-fx-background-coleor:  linear-gradient(to bottom, #2c3e50, #4ca1af); -fx-background-radius: 10px; -fx-border-radius: 10px;");
         //Add custom dragging
-        MainPane.setOnMousePressed(event -> {
-            xOffset = event.getSceneX();
-            yOffset = event.getSceneY();
-            isDragging = true;
-            
-
-
-        });
-
-        MainPane.setOnMouseDragReleased(event ->{
-            isDragging = false;
-            checkForSnap(stage);
-        });
-
-        MainPane.setOnMouseDragged(event -> {
-            if(isDragging){
-                stage.setX(event.getScreenX() - xOffset);
-                stage.setY(event.getScreenY() - yOffset);
-            }
-        });
-        webEngine = chatWebView.getWebEngine();
+        addCustomDragging(MainPane);
         
-        String markedJsPath = getClass().getResource("lightweight/Marked.js").toExternalForm();
-        String mathJaxPath = getClass().getResource("lightweight/tex-mml-chtml.min.js").toExternalForm();
-        
-        // TODO: Add mermaid to display diagrams
-        String mermaidPath = getClass().getResource("lightweight/mermaid.min.js").toExternalForm();
-        
-        System.out.println("Path:"+mathJaxPath);
-        System.out.println("Path:"+markedJsPath);
-        
-        
-        String initialContent = """
-        <!DOCTYPE html>
-        <html>
-        <head>
-        <style>
-          body { font-family: Arial, sans-serif; background-color: #f5f5f5; margin: 10px; padding: 10px; }
-          .message { max-width: 80%; border-radius: 10px; margin: 5px; }
-          .user { background-color: #2c3e50; color: white; align-self: flex-end; text-align: justify; margin: 3px; padding: 5px; }
-          .bot { background-color: #e0e0e0; color: black; align-self: flex-start; text-align: left; margin: 5px; padding: 10px; overflow-wrap: break-word; }
-          pre{ background-color: #000102; border-radius: 10px; color: wheat; box-shadow: 2px 2px grey; padding:5px; margin: 5px; }
-          /* Table style for the chat */
-              table {
-                border-collapse: separate;
-                width: 100%;
-              }
-              
-              th, td {
-                border: 1px solid #ddd;
-                padding: 10px;
-                text-align: left;
-                font-size: 14px;
-                font-weight: bold;
-                color: #333;
-              }
-              
-              th {
-                background-color: #f0f0f0;
-              }
-              
-              tr:nth-child(even) {
-                background-color: #f9f9f9;
-              }
-              
-              table caption {
-                margin-bottom: 10px;
-                text-align: center;
-              }
-              
-              table caption img {
-                max-width: 50%;
-                height: auto;
-              }
-              
-              table .header-row {
-                background-color: #333;
-                color: #fff;
-                font-size: 18px;
-                font-weight: bold;
-                padding: 5px;
-              }
-              /* Add a fade-in effect when the table is loaded */
-              table {
-                animation: fadeIn 1s;
-              }
-              
-              @keyframes fadeIn {
-                from {
-                  opacity: 0;
-                }
-                to {
-                  opacity: 1;
-                }
-              }
-          
-          .typing { font-weight: bold; animation: blink 1s infinite; }
-          @keyframes blink { 0%% { opacity: 1; } 50%% { opacity: 0; } 100%% { opacity: 1; } }
-          #chatbox { display: flex; flex-direction: column; }
-        </style>""" +
-         "<script src='" + markedJsPath + "'></script>" +
-         " <script async src='" + mathJaxPath + "'></script>" +
-         
-         """
-         <script type="text/javascript">
-           window.onload = function() {
-             if (typeof MathJax !== 'undefined' && MathJax.Hub) {
-               MathJax.Hub.Queue(["Typeset", MathJax.Hub, 'chatbox']);
-             }
-           };
-         
-           function renderMarkdown(markdownText, user) {
-             // Parse markdown using marked.js
-             var htmlContent = marked.parse(markdownText);
-         
-             // Create a message container div
-             var div = document.createElement('div');
-             div.className = 'message ' + user;
-             div.innerHTML = htmlContent;
-         
-             // Append to chatbox
-             document.getElementById('chatbox').appendChild(div);
-         
-             // Scroll to bottom
-             window.scrollTo(0, document.body.scrollHeight);
-         
-             // Trigger MathJax rendering for math content
-             if (typeof MathJax !== 'undefined' && MathJax.Hub) {
-               MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
-             }
-           }
-         </script>
-         """ +
-        """
-        </head>
-        <body>
-          <div id="chatbox" class="mermaid"></div>
-        </body>
-        </html>
-        """;
-        
-        webEngine.loadContent(initialContent);
         //Hide chat history
         MainPane.setLeft(null);
         //Load welcome dialog
@@ -348,10 +230,7 @@ public class ChatPaneController implements Initializable {
              
             state = 1;
         }
-       
-        
- 
-        
+    
     }    
     
 
@@ -359,15 +238,33 @@ public class ChatPaneController implements Initializable {
     * UTILITY AND APP LOGIC METHODS
     *******************************/
     
-    private String parseMarkdownAndLatex(String markdown) {
-        // You can replace $ for inline math and $$ for block math
-        // Inline: \( ... \)
-        markdown = markdown.replaceAll("\\$(.*?)\\$", "\\\\($1\\\\)");  // Inline math
-        // Block: \[ ... \]
-        markdown = markdown.replaceAll("\\$\\$(.*?)\\$\\$", "\\\\[$1\\\\]");  // Block math
-        return markdown;
+    
+    // Add custom dragging to pane
+    public void addCustomDragging(Node node){
+        node.setOnMousePressed(event -> {
+            xOffset = event.getSceneX();
+            yOffset = event.getSceneY();
+            isDragging = true;
+            
+
+
+        });
+
+        node.setOnMouseDragReleased(event ->{
+            isDragging = false;
+            checkForSnap(stage);
+        });
+
+        node.setOnMouseDragged(event -> {
+            if(isDragging){
+                stage.setX(event.getScreenX() - xOffset);
+                stage.setY(event.getScreenY() - yOffset);
+            }
+        });
+        
     }
     
+    // method to execute javascript
     private void executeJavaScript(String functionName, String markdownMessage, String senderClass) {
        Gson gson = new Gson();
        String jsonMessage = gson.toJson(markdownMessage);
@@ -461,51 +358,8 @@ public class ChatPaneController implements Initializable {
         }
     }
     
-    public void streamMessage(String htmlMessage) {
-        String senderClass = "bot";
-
-        // Create an empty div for the message and add a typing indicator
-        String initScript = String.format(
-            "var div = document.createElement('div');" +
-            "div.className = 'message %s';" +
-            "div.innerHTML = '<span class=\"typing\">...</span>';" + // Typing dots
-            "document.getElementById('chatbox').appendChild(div);" +
-            "window.scrollTo(0, document.body.scrollHeight);" +
-            "div", 
-            senderClass
-        );
-
-        Platform.runLater(() -> {
-            JSObject messageDiv = (JSObject) chatWebView.getWebEngine().executeScript(initScript);
-            System.out.println(messageDiv);
-            startStreaming(htmlMessage, messageDiv);
-        });
-    }
-
-    private void startStreaming(String htmlMessage, JSObject messageDiv) {
-        new Thread(() -> {
-            try {
-                Thread.sleep(500); // Show typing indicator for a moment
-                Platform.runLater(() -> messageDiv.eval("this.innerHTML = '';")); // Remove typing indicator
-
-                String[] words = htmlMessage.split(" ");
-                for (String word : words) {
-                    String appendScript = String.format(
-                        "this.innerHTML += '%s ';" + 
-                        "window.scrollTo(0, document.body.scrollHeight);", 
-                        word.replace("'", "\\'")
-                    );
-
-                    Platform.runLater(() -> messageDiv.eval(appendScript));
-                    Thread.sleep(150); // Adjust speed of word streaming
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
-    }
     
-    
+    // Excecute js to add messages
     public void addMessage(String markdownMessage, boolean isUser) {
         String senderClass = isUser ? "user" : "bot";
         executeJavaScript("renderMarkdown",markdownMessage, senderClass);   
@@ -526,108 +380,175 @@ public class ChatPaneController implements Initializable {
    
      
     //Process user input
-    private void processUserInput(){
-        // perform various checks
-        if(userMessage.getText().isEmpty()){
+    private void processUserInput() {
+        if(!isStreaming){
             
-            userMessage.setText("Please enter message here");
-            userMessage.getStyleClass().add("warning");
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
-                userMessage.getStyleClass().remove("warning");
-                userMessage.setText("");
+            if (userMessage.getText().isEmpty()) {
+                UtilityMethods.showAlert(AlertType.INFORMATION, "Chat", "Please enter a message!");
+                return;
             }
-            ));
-            timeline.setCycleCount(1);
-            timeline.play();
-            
-             return;
-        }
-        
-        //remove welcome dialog
-        if(chatsBox.getAlignment() == Pos.CENTER){
+
+        // Remove welcome dialog if needed
+        if (chatsBox.getAlignment() == Pos.CENTER) {
             chatsBox.getChildren().clear();
             chatsBox.setAlignment(Pos.TOP_LEFT);
             chatsBox.getChildren().add(chatWebView);
             chatsBox.setFillWidth(true);
         }
-        
+
+        //Check converstion id before adding message.
         String message = userMessage.getText();
         userMessage.clear();
-        addMessage(message, true);
-        chatProgress.setVisible(true);
+        isStreaming = true;
+        addMessage(message, true); // Show user message
+        Platform.runLater(() -> chatProgress.setVisible(true));
+
+       // Change send button icon to stop icon and add blinking effect
         
-        // enable progress while receiving response
-        Platform.runLater(()->{
-            chatProgress.setVisible(true);
+        Image stopImage = new Image(getClass().getResource("res/images/icons/close_white.png").toExternalForm());
+        sendBtn.setFitWidth(109);
+        sendBtn.setFitHeight(45);
+        sendBtn.setImage(stopImage);
+        
+        Platform.runLater(() -> {
+            System.out.println("Starting blink  from processInput block. (414)");
+            sendBtn.setImage(stopImage);
+            BlinkAnimation.getInstance().startBlink(sendBtn);
         });
-        // Send Message and get response
-        BackGroundFetch getRes = new BackGroundFetch(message, Session.isNewChat(), Session.getConversation_id());
+        // Start streaming thread
+        streamingThread = new Thread(() -> streamResponseFromOllama(message));
+        streamingThread.setDaemon(true);
+        streamingThread.start();
         
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<String> response = (Future<String>) executor.submit(getRes);
-        executor.submit(() -> {
-            try {
-                String chatbotMessage =  response.get();
-                chatProgress.setVisible(false);
-                
-                //update ui
-                Platform.runLater(() -> {
-                    try {
-                        if(response.get() != null){
-                            
-                            //Display chatbot message
-                            addMessage(chatbotMessage, false);
-                       
-                            switch (state) {
-                                // New chat
-                                case 0 -> {
-                                   
-                                    //remove Dummy chatHistory
-                                    chatHistoryAccordion.getPanes().remove(noHistory);
-                                    appendHistory(message, chatbotMessage);
-                                    state = 3; //Set state for chat continuation
-                                    return;
-                                }
-                                case 2 -> {
-                                    //Initialize chat settings
-                                    //HandleChat(message, chatbotMessage);
-                                    appendHistory(message, chatbotMessage);
-                                    state = 3; //Set state for chat continuation
-                                    return;
-                                }
-                                case 1 -> {
-                                    //HandleChat(message, chatbotMessage);
-                                    //remove Dummy chatHistory
-                                    chatHistoryAccordion.getPanes().remove(noHistory);
-                                    appendHistory(message, chatbotMessage);
-                                    state = 3; //Set state for chat continuation
-                                    return;
-                                }
-                                default -> {
-                                    //Continuing a chat
-                                    // Save and keep track of chats for both user and chatbot
-                                    
-                                }
-                            }
-                            
-                        }
-                    } catch (InterruptedException | ExecutionException ex) {
-                        Logger.getLogger(ChatPaneController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                });
-          
-        } catch (InterruptedException | ExecutionException ex) {
-            Logger.getLogger(ChatPaneController.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            executor.shutdown();
+        }else{
+            // Stop text generation 
+            
+            Platform.runLater(() -> chatProgress.setVisible(false));
+            stopStreaming = true;
+            isStreaming = false;
+            // Change send button icon to stop icon and add blinking effect
+            Image stopImage = new Image(getClass().getResource("res/images/icons/send-white.png").toExternalForm());
+            sendBtn.setFitWidth(109);
+            sendBtn.setFitHeight(45);
+            System.out.println("Stopping blink  from processInput block. (432)");
+            //Platform.runLater(() -> {
+                sendBtn.setImage(stopImage);
+                BlinkAnimation.getInstance().stopBlink();
+                sendBtn.setVisible(true);
+            //});
+            
+        
         }
-    });
-        // Check conversation ids before adding message
+
+}
+
+    
+    //Stream mesage from backend api
+    private void streamResponseFromOllama(String prompt) {
+    try {
+        String baseUrl = "http://localhost:8000/llm";
+
+        JSONObject data = new JSONObject();
+        data.put("message", prompt);
+        if(Session.isNewChat()){
+            data.put("new_chat", Session.isNewChat());
+        }
+        
+        data.put("conversation_id", Session.getConversation_id());
+        System.out.println("Added Conversation Id:"+ Session.getConversation_id());
+        
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(new URI(baseUrl + "/chat"))
+                .header("Authorization", "Bearer " + Session.getAuthToken())
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(data.toString()))
+                .build();
+
+        isStreaming = true;
+        client.sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
+                .thenAccept(response -> {
+                    String conversation_id = response.headers().firstValue("X-Conversation-ID").orElse(null);
+                    System.out.println("New chat:"+Session.isNewChat());
+                    System.out.println("Conversation:"+ conversation_id);
+                    Session.setConversation_id(conversation_id);
+                    // generate response while user hasn't pressed stop button
+                    
+                    try (InputStream inputStream = response.body();
+                     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+
+                    StringBuilder botMessageBuilder = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null && !stopStreaming) {
+                        if (!line.trim().isEmpty()) {
+                            JSONObject obj = new JSONObject(line);
+                            String content = obj.optString("response", "");
+                            if (!content.isEmpty()) {
+                                botMessageBuilder.append(content);
+
+                                String escaped = content.replace("'", "\\'").replace("\n", "<br>");
+                                Platform.runLater(() -> {
+                                     executeJavaScript("appendToLastMessage", content, "bot");
+                                     System.out.println("Streaming : "+isStreaming);
+
+                                });
+                            }
+                        }
+                    }
+
+
+                    // Finalize and update state
+                    String finalMessage = botMessageBuilder.toString();
+                    //Render text to ui 
+
+                    Platform.runLater(() -> {
+                        chatProgress.setVisible(false);
+                        chatWebView.getWebEngine().executeScript("cleanTempBox()");
+                        if (!finalMessage.isBlank()) {
+                            Platform.runLater(() -> {
+                            System.out.println("Stopping blink  from streamer block.");
+                            Image stopImage = new Image(getClass().getResource("res/images/icons/send-white.png").toExternalForm());
+                            sendBtn.setFitWidth(109);
+                            sendBtn.setFitHeight(45);
+                            
+                                sendBtn.setImage(stopImage);
+                                BlinkAnimation.getInstance().stopBlink();
+                                sendBtn.setVisible(true);
+                            });
+                            System.out.println("Full response:"+ finalMessage);
+                            executeJavaScript("renderMarkdown", finalMessage, "bot");
+                            state = 3; // Continue existing conversation
+                            isStreaming = false;
+
+                        }
+                    });
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Platform.runLater(() -> {chatWebView.getWebEngine().executeScript("cleanTempBox()");});
+                }
+                    
+                });
+       
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        Platform.runLater(() -> {chatWebView.getWebEngine().executeScript("cleanTempBox()");});
     }
-   
     
+}
+
+
+
+
     
- 
+ private String escapeJson(String str) {
+    return str.replace("\"", "\\\"")
+              .replace("\n", "\\n")
+              .replace("\r", "")
+              .replace("\t", "\\t");
+}
+
 
     //Method to generate historyPane for accordion
     public TitledPane makeChatPane(String chatId, String title, String description){
@@ -695,7 +616,7 @@ public class ChatPaneController implements Initializable {
             public void handle(ActionEvent eh) {
                 String selectedChatId = chatHistoryAccordion.getExpandedPane().getId();
                 // Get selected chat from chatList
-                if(selectedChatId == Session.getConversation_id()){
+                if(selectedChatId == Session.getConversation_id() ){
                     Alert prompt = new Alert(Alert.AlertType.CONFIRMATION);
                     prompt.setHeaderText("Permission to delete current chat.");
                     prompt.setContentText("Are you sure you want to delete this chat?");
@@ -712,15 +633,16 @@ public class ChatPaneController implements Initializable {
                         openNewChat(eh);
                         state = 0;
                     }
-                }else{
-                    // remove and delete chat
-                    chatsBox.getChildren().clear();
+                }else if(!(Session.getConversation_id() == null)){
                     // Delete chat pane from history pane, do it well
                     chatHistoryAccordion.getPanes().remove(chatHistoryAccordion.getExpandedPane());
 
                     // TODO: Delete chat from local database too
                     deleteChat(selectedChatId);
-                    state = 0;
+                    
+                }else{
+                    deleteChat(selectedChatId);
+                    chatHistoryAccordion.getPanes().remove(chatHistoryAccordion.getExpandedPane());
                 }
             }
         });
@@ -753,16 +675,12 @@ public class ChatPaneController implements Initializable {
 
     }  
     
+    
     // Load Previous chats pane
     public void loadChatsPane(){
         //Loop through chat list, create a pane for it and load it
         // Make request to the /conversation endpoint
         try {
-            /* [{
-                "conversation_id": conv_id,
-                "conversation_header": header,
-                "conversation_desc": description
-            }]*/
             JSONObject response = ApiFunctions.loadConversations();
             int total_convos = response.getInt("total");
             if(total_convos > 0){
@@ -774,11 +692,7 @@ public class ChatPaneController implements Initializable {
                     String description = chatDesc.getString("conversation_desc");
                     chatHistoryAccordion.getPanes().add(makeChatPane(chat_id, header, description));
                 }
-            }else{
-                // Display noHistory pane
-                
             }
-      
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -795,10 +709,6 @@ public class ChatPaneController implements Initializable {
         alert.show();
     }
 
-
-    /* *****************\
-    | DATABASE METHODS  |
-    \*******************/
     
     //Fetch userMessages. Call this method when load Button is clicked
     public void loadChatBox(String chatId){
@@ -825,7 +735,7 @@ public class ChatPaneController implements Initializable {
             }
  
         }catch(IOException ex){
-            System.out.println("Error:"+ ex.getMessage());
+            ex.printStackTrace();
        
         }
     }
@@ -906,17 +816,15 @@ public class ChatPaneController implements Initializable {
         //TODO: Clear current chatsBox
         newChat = true;
         Session.setNewChat(newChat);
-        
+        //Clear current converstion id
+        Session.setConversation_id(null);
+        stopStreaming = true;
         chatsBox.getChildren().clear();
         chatsBox.getChildren().add(welcomePane);
         chatsBox.setAlignment(Pos.CENTER);
         chatsBox.setFillWidth(false);
         chatWebView.getWebEngine().executeScript("document.getElementById('chatbox').innerHTML = '';");
         
-        // TODO : HTML WELCOME CARD and delete it when user press send button
-        
-        //Clear current converstion id
-        Session.setConversation_id(null);
         // Set state
         if(state == 1){
             state = 2;
@@ -931,39 +839,7 @@ public class ChatPaneController implements Initializable {
         
     }
     
-    //COPY MESSAGE
-    private void handleTextFlowClick(MouseEvent event, TextFlow textFlow){
-        // Get the text from the TextFlow
-        StringBuilder textToCopy = new StringBuilder();
-        for(var node : textFlow.getChildren()){
-            if(node instanceof Text){
-                textToCopy.append(((Text) node).getText());
-            }
-        }
-        
-        // Copy the text to the clipboard
-        Clipboard clipboard = Clipboard.getSystemClipboard();
-        ClipboardContent content = new ClipboardContent();
-        content.putString(textToCopy.toString());
-        clipboard.setContent(content);
-        
-        
-        
-    }
-
-    //Set font size
-    private void setFontColor(ActionEvent event) {
-        String fgColor = fgColorPicker.getValue().toString().replace("0x", "#");
-        //TODO: Logic to set font color
-        //chatsBox.setStyle("-fx-text-fill:"+fgColor+";"); 
-    }
-
-    //Set background color
-    private void setBodyColor(ActionEvent event) {
-        String bgColor = bgColorPicker.getValue().toString().replace("0x", "#");
-        chatsBox.setStyle("-fx-background-color: black; -fx-background-radius: 10px; ");
-    }
-
+    
     @FXML
     private void showWidgetsPane(MouseEvent event) {
         // Load widgets pane from file and embed it ib border pane (right) side.
@@ -989,7 +865,7 @@ public class ChatPaneController implements Initializable {
     @FXML
     void explainConceptPrompt(ActionEvent event) {
         String prompt = "I need an explanation of a concept. "
-                + "Ask me which concept I want to learn about, then provide a clear and concise explanationwith examples.";
+                + "Ask me which concept I want to learn about, then provide a clear and concise explanation with examples.";
         userMessage.setText(prompt);
         processUserInput();
     }

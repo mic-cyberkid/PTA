@@ -2,10 +2,16 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
+import javafx.scene.web.WebEngine;
 
 public class ApiFunctions {
 
@@ -215,6 +221,38 @@ public class ApiFunctions {
     
         }
     }
+    
+    
+    //Stream message
+    public void sendMessageWithStreaming(String message, boolean newChat, String conversationId, WebEngine engine) throws IOException, InterruptedException {
+    String url = BASE_URL + "/chat";
+
+    // Build the request body
+    JSONObject body = new JSONObject();
+    body.put("message", message);
+    body.put("new_chat", newChat);
+    body.put("conversation_id", conversationId);
+
+    HttpClient client = HttpClient.newHttpClient();
+    HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(url))
+            .header("Authorization", "Bearer " + authToken)
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString(body.toString()))
+            .build();
+
+    // Listen for chunks of text
+    client.sendAsync(request, HttpResponse.BodyHandlers.ofLines())
+            .thenAccept(response -> {
+                response.body().forEach(line -> {
+                    // Incrementally render each chunk of the response
+                    Platform.runLater(() -> {
+                        engine.executeScript("appendToLastMessage(" + JSONObject.quote(line) + ")");
+                    });
+                });
+            });
+}
+
     
     
      public static JSONObject explainConversion(String message) throws IOException {

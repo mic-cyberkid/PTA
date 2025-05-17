@@ -10,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+
 public class Launcher extends Application {
     
     // variables to enable dragging
@@ -64,6 +66,7 @@ public class Launcher extends Application {
     }
 
     public static void main(String args[]) {
+     
         launch(args);
     }
 

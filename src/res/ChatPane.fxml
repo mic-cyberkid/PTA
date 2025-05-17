@@ -22,7 +22,7 @@
 
 <BorderPane fx:id="MainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="511.0" prefWidth="672.0" style="-fx-background-color: rgba(44,62,80,0.2); -fx-background-radius: 10;" stylesheets="@chatPane.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ChatPaneController">
    <center>
-      <VBox fx:id="chatsBox" alignment="CENTER" fillWidth="false" focusTraversable="true" pickOnBounds="false" prefHeight="265.0" prefWidth="313.0" style="-fx-background-color: #4ca1af; -fx-background-radius: 8px;">
+      <VBox fx:id="chatsBox" alignment="CENTER" fillWidth="false" focusTraversable="true" pickOnBounds="false" prefHeight="265.0" prefWidth="313.0" style="-fx-background-color: #4ca1af; -fx-background-radius: 8px;" styleClass="blinker" stylesheets="@anims.css">
          <children>
             <Pane fx:id="welcomeDialog" focusTraversable="true" prefHeight="247.0" prefWidth="366.0" style="-fx-background-color: rgba(96,161,195,0.6) rgba(96,161,195,0.6); -fx-background-radius: 15;">
                <effect>
@@ -34,7 +34,7 @@
                         <Font name="Book Antiqua Bold Italic" size="22.0" />
                      </font>
                   </Label>
-                  <Label layoutX="75.0" layoutY="55.0" prefHeight="35.0" prefWidth="186.0" text="What can I help with?" textFill="WHITE">
+                  <Label layoutX="75.0" layoutY="55.0" prefHeight="35.0" prefWidth="186.0" styleClass="wiggle" stylesheets="@anims.css" text="What can I help with?" textFill="WHITE">
                      <font>
                         <Font name="Book Antiqua Bold Italic" size="18.0" />
                      </font>
@@ -47,7 +47,7 @@
                         <DropShadow />
                      </effect>
                   </Button>
-                  <Button fx:id="createQuizPrompt" layoutX="189.0" layoutY="101.0" mnemonicParsing="false" onAction="#quizPrompt" prefHeight="34.0" prefWidth="144.0" style="-fx-background-radius: 10; -fx-background-color: rgba(96,161,195,0.6);" text="Create Quizzes" textFill="WHITE">
+                  <Button fx:id="createQuizPrompt" layoutX="189.0" layoutY="101.0" mnemonicParsing="false" onAction="#quizPrompt" prefHeight="34.0" prefWidth="144.0" style="-fx-background-radius: 10; -fx-background-color: rgba(96,161,195,0.6);" stylesheets="@anims.css" text="Create Quizzes" textFill="WHITE">
                      <font>
                         <Font name="Century" size="15.0" />
                      </font>
@@ -260,7 +260,7 @@
                   <Insets bottom="6.0" left="5.0" right="5.0" />
                </HBox.margin>
             </VBox>
-            <HBox alignment="CENTER_RIGHT" layoutX="246.0" layoutY="10.0" prefHeight="74.0" prefWidth="476.0" spacing="10.0" HBox.hgrow="ALWAYS">
+            <HBox alignment="CENTER_RIGHT" layoutX="246.0" layoutY="10.0" prefHeight="74.0" prefWidth="476.0" spacing="10.0" stylesheets="@anims.css" HBox.hgrow="ALWAYS">
                <children>
                   <ProgressIndicator fx:id="chatProgress" prefHeight="30.0" prefWidth="46.0" visible="false" />
                   <TextArea fx:id="userMessage" prefHeight="200.0" prefWidth="200.0" promptText="Message here ...." scaleZ="5.0" stylesheets="@chatPane.css" HBox.hgrow="ALWAYS">

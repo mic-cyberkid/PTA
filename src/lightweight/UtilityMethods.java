@@ -1,14 +1,18 @@
-
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import javafx.animation.FadeTransition;
+import javafx.animation.Interpolator;
+import javafx.animation.RotateTransition;
+import javafx.animation.TranslateTransition;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
 
 public class UtilityMethods {
@@ -72,7 +76,37 @@ public class UtilityMethods {
         alert.show();
     }
     
+    // Fade in effect
+    public void applyFadeInEffect(Node node) {
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(2), node);
+        fadeTransition.setFromValue(0);
+        fadeTransition.setToValue(1);
+        fadeTransition.play();
+    }
     
+    public void applyBounceEffect(Node node) {
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), node);
+        transition.setByY(-10); // Move up 10px
+        transition.setCycleCount(4); // Repeat 4 times
+        transition.setInterpolator(Interpolator.EASE_OUT); // Bounce effect
+        transition.setAutoReverse(true); // Auto reverse after each cycle
+        transition.play();
+    }
+    
+    public void applySlideInLeft(Node node) {
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(1), node);
+        transition.setFromX(-300); // Start off-screen
+        transition.setToX(0); // Move to normal position
+        transition.play();
+}
+    
+    public void applyRotateEffect(Node node) {
+        RotateTransition rotateTransition = new RotateTransition(Duration.seconds(3), node);
+        rotateTransition.setByAngle(360); // Rotate 360 degrees
+        rotateTransition.setCycleCount(RotateTransition.INDEFINITE); // Infinite rotation
+        rotateTransition.setInterpolator(Interpolator.LINEAR);
+        rotateTransition.play();
+}
     
     
 }
